@@ -1,0 +1,417 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Varela+Round&display=swap');
+
+html {
+    font-family: "DM Sans", "Noto Sans", sans-serif !important;
+    color: #a4a8bb;
+    background: radial-gradient(circle,rgba(16, 18, 29, 50) 25%, rgba(0, 0, 0, 50) 100%); 
+    font-size: medium;   
+}
+
+body {
+    margin: 0; /* Elimina el margen predeterminado del body */
+    padding: 0; /* Elimina el padding predeterminado del body */
+    min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura del viewport */
+    box-sizing: border-box; /* Incluye padding y border en el tamaño total */
+}
+
+.title_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 20vh;
+}
+
+.h1-title {
+    font-size: clamp(2.5rem, 5vw, 3.75rem); /* min: 40px, preferred: 5vw, max: 60px */
+    text-align: center;
+    margin-top: -0.625rem; /* -10px convertido a rem */
+    margin-bottom: 0.625rem; /* 10px convertido a rem */
+}
+
+.h2-title {
+    text-align: center;
+    color: #1b5f8d;
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem); /* min: 20px, preferred: 2.5vw, max: 30px */
+   
+}
+
+
+.dash-uploader {
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.75rem; /* 60px */
+    width: 50rem; /* Ancho responsivo */
+    max-width: 50rem; /* 600px */
+    padding: 1.25rem 1.875rem; /* 20px 30px */
+    border: 2px solid transparent;
+    border-radius: 0.9375rem; /* 15px */
+    background-color: transparent;
+    cursor: pointer;
+    font-weight: bold;
+    scale: 1.0;
+    transition: 0.2s ease-out;
+    margin: 0 auto; /* Centrar horizontalmente */
+}
+
+._dash-undo-redo {
+    background: none !important;
+    border: none !important;
+}
+
+
+
+
+.dash-uploader:hover {
+    color:#10121d;
+    background-color: #237bb6;
+    border: 2px solid transparent;
+    transition: 0.2s ease-in;
+    
+    /* font-weight: bold; */
+}
+
+
+div[data-dash-is-loading="true"]::before {
+    display: none !important;
+}
+
+.h3-inputs-container {
+    
+    display: flex;
+    gap: 3.75rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    margin-bottom: -2.8125rem;
+
+}
+.h3-inputs {
+    text-align: center;
+    margin-top: -2.5rem;
+}
+
+.h3-inputs-units {
+    text-align: center;
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+    margin-top: -0.625rem;
+    text-indent: -0.3125rem;
+}
+
+.sliders-container {
+    margin-right: 1rem;
+    margin-left: 1rem;
+    height: 165px;
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    vertical-align: middle;
+    background-color: rgba(27, 95, 141,0.05);
+    border-radius: 0.5rem;
+    gap: 3.125rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3125rem;
+    margin-top: 0.2rem;
+
+
+}
+.widgets_container {
+    margin-top: 3.2rem;
+    vertical-align: middle;
+    display: flex;
+    gap: 0.625rem;;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3125rem;
+
+}
+
+.input-slider .rc-slider-vertical {
+    height: 8.75rem;
+    width: 2.1875rem;
+    margin-bottom: -0.625rem;;
+}
+
+.input-slider .rc-slider-rail {
+    background-color: #a4a8bb; /* track inactivo */
+    width: 0.5rem;
+}
+
+.input-slider .rc-slider-track {
+    background-color: #1b5f8d; /* track activo */
+    width: 0.5rem;
+}
+
+.input-slider .rc-slider-handle {
+    border: 1px solid white;
+    background-color: #1b5f8d;
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-left: -0.21875rem;
+    margin-top: 0px;
+}
+
+.input-slider .rc-slider-dot {
+    border: 1px solid transparent;
+    background-color: transparent;
+    width: 0.3125rem;
+    height: 0.3125rem;
+    margin-left: -0.625rem;
+    margin-top: -1.25rem;
+}
+
+.input-slider .rc-slider-mark-text-active {
+    color: white;
+    border: 1px solid transparent;
+    background-color: transparent;
+    margin-bottom: 0px;
+}
+
+.input-slider .rc-slider-mark-text {
+    font-size: 0.625rem;
+    transform: translateY(-65%);
+}
+
+
+.inputs-container {
+    display: flex;
+    gap: 6.875rem;;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    margin-top: -5rem;
+
+}
+
+
+.input-fields {
+    width: 4.375rem;
+    height: 2.5rem;
+    background-color: transparent;
+    border: 2px solid #1b5f8d;
+    border-radius: 0.5rem;
+    text-align: center;
+    color: #a4a8bb;
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    font-size: 1.875rem;
+    font-weight: bold;
+    outline: none;
+    box-shadow: none;
+    margin-top: -3.125rem;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.input-fields:focus {
+    border: 2px solid #237bb6;
+    box-shadow: 0 0 0.625rem #237bb6;
+}
+
+.logout-button {
+    text-align: center;
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    height: 2.5rem;
+    width: 100px;
+    border: 0px solid transparent;
+    border-radius: 0.625rem;
+    
+    background-color: #113c58;
+    color: #a4a8bb;
+
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.875rem;
+    font-weight: bold;
+    display: block;
+    scale: 1.0;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.logout-button:hover{
+    background-color: #1b5f8d;
+    scale: 1.01;
+    transition: 0.2s ease-in-out;
+}
+
+.logout-button:active {
+transform: scale(0.98);
+transition: 0.2s ease-out
+
+}
+
+.charts-container {
+    height: auto;
+    width: 100%;
+    margin-left: 0.9375rem;
+    align-items: center;
+    padding: 0.3125rem;
+    background-color: rgba(27, 95, 141,0.05);
+    border-radius: 0.5rem;
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 0.9375rem;
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    
+    
+}
+.matches-chart, .summary-chart {
+    height:clamp(150px, 30vh, 250px);
+    /* width: 100%; */
+    /* height: 250px;  */
+    font-family: "DM Sans", "Noto Sans", sans-serif; 
+    margin-left: 0;
+}
+
+.match-time-h2, .match-count-h2 {
+    margin-top: 6.25rem;
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+    color: #1b5f8d;
+    margin-bottom: 0.3125rem;
+}
+.match-time-h1, .match-count-h1 {
+    margin-top: 1.5625rem;
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    font-size: clamp(1.875rem, 4vw, 3.125rem);
+}
+
+
+.data-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.625rem; 
+    align-items: flex-start;
+    
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.625rem;
+    margin-top: 0.55rem;
+}
+
+.match-time-container {
+    
+    margin-right: 1rem;
+    margin-left: 1rem;
+    margin-top: 0px;
+    flex-shrink: 0;
+    padding: 0.3125rem;
+    background-color: rgba(27, 95, 141,0.05);
+    border-radius: 0.5rem;
+    text-align: center;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    height: 33.125rem;
+    width: 20%;
+    max-width: 15.625rem;
+}
+
+/* ======================================================================= */
+/* MEDIA QUERIES para Responsividad */
+/* ======================================================================= */
+
+/* Para pantallas de tablet y móviles grandes (máximo 768px de ancho) */
+@media (max-width: 48rem) { /* 768px convertido a rem */
+    /* Ajustes globales */
+    html {
+        font-size: 90%; /* Reduce la fuente base para pantallas más pequeñas */
+    }
+
+    /* Contenedores principales */
+    .data-container {
+        flex-direction: column; /* Apila los gráficos y el tiempo verticalmente */
+        align-items: center; /* Centra los elementos apilados */
+        padding: 1rem;
+        margin-top: 0; /* Reinicia el margen superior si es necesario */
+    }
+
+    .charts-container {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        margin-left: 0; /* Quita el margen izquierdo */
+        padding: 0.5rem;
+    }
+
+    .matches-chart, .summary-chart {
+        height: clamp(120px, 25vh, 200px); /* Ajusta la altura de los gráficos para móviles */
+    }
+
+    .match-time-container {
+        width: 80%; /* Ocupa más ancho en móvil */
+        height: auto; /* Deja que la altura se ajuste al contenido */
+        min-height: 8rem; /* Una altura mínima razonable */
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 1.5rem; /* Espacio entre el gráfico de resumen y el tiempo */
+        max-width: none; /* Elimina el max-width para que ocupe el 80% en móvil */
+    }
+
+    /* Sliders e Inputs */
+    .h3-inputs-container,
+    .sliders-container,
+    .inputs-container {
+        flex-direction: column; /* Apila los grupos de sliders/inputs */
+        gap: 1.5rem; /* Reduce el espacio entre ellos */
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .widgets_container {
+        flex-direction: row; /* Mantén el slider y el input en fila si caben */
+        gap: 0.5rem;
+    }
+
+    .dash-uploader {
+        width: 90%; /* Ocupa más ancho en móvil */
+        max-width: none; /* No hay límite máximo de ancho */
+    }
+
+    .logout-button {
+        position: static; /* Quita el posicionamiento absoluto */
+        margin: 1rem auto; /* Centra el botón y dale margen */
+        width: 80%;
+    }
+}
+
+/* Para pantallas de móvil pequeñas (máximo 480px de ancho) */
+@media (max-width: 30rem) { /* 480px convertido a rem */
+    html {
+        font-size: 85%; /* Reduce aún más la fuente base */
+    }
+
+    .h1-title {
+        font-size: clamp(2rem, 8vw, 2.5rem); /* Ajusta el tamaño del título principal */
+    }
+
+    .dash-uploader {
+        height: 3rem; /* Reduce la altura del uploader */
+        font-size: 0.9rem;
+    }
+
+    .input-fields {
+        font-size: 1.2rem; /* Reduce la fuente de los inputs */
+        width: 3.5rem;
+        height: 2rem;
+    }
+
+    .input-slider .rc-slider-vertical {
+        height: 6rem; /* Reduce la altura de los sliders */
+    }
+
+    .match-time-container {
+        width: 90%;
+        min-height: 6rem;
+    }
+}
