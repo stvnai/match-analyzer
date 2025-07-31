@@ -4,57 +4,103 @@ html {
     font-family: "DM Sans", "Noto Sans", sans-serif !important;
     color: #a4a8bb;
     background: radial-gradient(circle,rgba(16, 18, 29, 50) 25%, rgba(0, 0, 0, 50) 100%); 
-    font-size: medium;   
+    font-size: 1rem;   
 }
 
 body {
-    margin: 0; /* Elimina el margen predeterminado del body */
-    padding: 0; /* Elimina el padding predeterminado del body */
-    min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura del viewport */
-    box-sizing: border-box; /* Incluye padding y border en el tamaño total */
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+    flex-direction: column;
 }
+
+.main-container {
+    display: flex; 
+    flex-direction: column;
+    flex-grow: 1; /*cambio prueba*/
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 1rem;
+}
+
+/* #####*** HEADER CONTAINER ***##### */
+
+.header-container {
+    gap: 0.75rem;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    padding: 1.25rem 1rem;
+    background-color: #10121d39;
+    border-bottom: 1px solid #113c58;
+}
+
 
 .title_container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 20vh;
+    width: 100%;
+    min-height: 5rem;
+    max-width: 31.25rem;
+    margin-bottom: 0.5rem;
 }
 
 .h1-title {
     font-size: clamp(2.5rem, 5vw, 3.75rem); /* min: 40px, preferred: 5vw, max: 60px */
     text-align: center;
-    margin-top: -0.625rem; /* -10px convertido a rem */
-    margin-bottom: 0.625rem; /* 10px convertido a rem */
-}
-
-.h2-title {
-    text-align: center;
-    color: #1b5f8d;
-    font-family: "DM Sans", "Noto Sans", sans-serif;
-    font-size: clamp(1.25rem, 2.5vw, 1.875rem); /* min: 20px, preferred: 2.5vw, max: 30px */
-   
+    /* margin-left: 0.625rem; */
+    margin-top: -0.625rem;
+    margin-bottom: 0.625rem;
+    color: #a4a8bb;
 }
 
 
-.dash-uploader {
+.dash-uploader-area {
     
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 1.75rem; /* 60px */
-    width: 50rem; /* Ancho responsivo */
-    max-width: 50rem; /* 600px */
-    padding: 1.25rem 1.875rem; /* 20px 30px */
-    border: 2px solid transparent;
-    border-radius: 0.9375rem; /* 15px */
-    background-color: transparent;
+    height: 3.75rem; /* 60px */
+    width: 95%; /* Ancho responsivo */
+    padding: 0.7rem;
+    border: 2px dashed rgba(27, 95, 141, 0.06);
+    border-radius: 0.75rem; /* 15px */
+    background-color: rgba(27, 95, 141, 0.05);
     cursor: pointer;
-    font-weight: bold;
+    font-size: 1rem;
+    color:#a4a8bb;
+    text-align: center;
     scale: 1.0;
     transition: 0.2s ease-out;
-    margin: 0 auto; /* Centrar horizontalmente */
+}
+
+
+.dash-uploader-area:hover {
+    color:#a4a8bb;
+    background-color: #237bb62a;
+    /* border: 2px solid transparent; */
+    transition: 0.2s ease-in;
+    
+    /* font-weight: bold; */
+}
+
+.dash-uploader-area p {
+    margin: 0.2rem 0;
+}
+
+.dash-uploader-area a {
+    color: #237bb6;
+    font-weight: bold;
+    text-decoration: none; /* Quita el subrayado por defecto */
+}
+.dash-uploader-area a:hover {
+    /* color: #126971; */
+    font-weight: bold;
+    text-decoration: none; /* Quita el subrayado por defecto */
 }
 
 ._dash-undo-redo {
@@ -62,82 +108,188 @@ body {
     border: none !important;
 }
 
-
-
-
-.dash-uploader:hover {
-    color:#10121d;
-    background-color: #237bb6;
-    border: 2px solid transparent;
-    transition: 0.2s ease-in;
-    
-    /* font-weight: bold; */
-}
-
-
 div[data-dash-is-loading="true"]::before {
     display: none !important;
 }
 
-.h3-inputs-container {
-    
+.dash-uploader-area.dash-uploader--reject {
+    border-color: transparent !important; /* Fuerza el borde transparente */
+    background-color: transparent !important; /* Fuerza el fondo transparente */
+    color: #a4a8bb !important; /* Fuerza el color de texto normal */
+    /* Puedes añadir !important a otras propiedades si Dash las está sobrescribiendo */
+}
+
+/* #####*** MAIN CONTENT AREA ***##### */
+
+.main-content-area {
     display: flex;
-    gap: 3.75rem;
-    align-items: center;
-    justify-content: center;
-    padding: 0px;
-    margin-bottom: -2.8125rem;
-
-}
-.h3-inputs {
-    text-align: center;
-    margin-top: -2.5rem;
+    flex-direction: row;
+    gap: 2rem;
+    flex-grow: 1;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
-.h3-inputs-units {
-    text-align: center;
-    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
-    margin-top: -0.625rem;
-    text-indent: -0.3125rem;
+/* #####*** SUMMARY METRICS + CHARTS CONTAINER ***##### */
+
+.data-area-container {
+    /* height: 38.65rem; */
+    display: flex;
+    flex-direction: column;
+    gap:1.25rem;
+    flex-grow: 1;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
-.sliders-container {
-    margin-right: 1rem;
-    margin-left: 1rem;
-    height: 165px;
-    font-family: "DM Sans", "Noto Sans", sans-serif;
-    vertical-align: middle;
-    background-color: rgba(27, 95, 141,0.05);
+/* #####*** SUMMARY METRICS CONTAINER ***##### */
+
+.summ-metrics-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    /* justify-content: space-around; */
+    align-items: flex-start;
+    padding: 0.625rem;
+    background-color: radial-gradient(circle,rgba(16, 18, 29, 50) 25%, rgba(0, 0, 0, 50) 100%);
     border-radius: 0.5rem;
-    gap: 3.125rem;
-    align-items: center;
-    justify-content: center;
-    padding: 0.3125rem;
-    margin-top: 0.2rem;
-
-
+    box-sizing: border-box;
+    max-height: 9rem;
+    width: 100%;
 }
-.widgets_container {
-    margin-top: 3.2rem;
-    vertical-align: middle;
+
+/* #####*** INDIVIDUAL METRICS CONTAINERS ***##### */
+
+.match-time-container,
+.match-count-container,
+.power-trend-container,
+.gain-loss-container {
     display: flex;
-    gap: 0.625rem;;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    background-color: rgba(27, 95, 141, 0.06); 
+    border-radius: 0.5rem;
+    min-width: 10rem; 
+    flex: 1 1 calc(33.333% - 1.25rem); 
+    max-width: 14.375rem; 
+    height: 5.75rem;
+    box-sizing: border-box;
+}
+
+.summ-metrics-h2 {
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+
+    font-size: clamp(1.25rem, 1.25vw, 1.5rem); /* Escala de 16px a 20px */
+    color: #1b5f8d;
+    margin-bottom: -0.45rem;
+    text-align: center;
+}
+
+.summ-metrics-h1 {
+    font-size: clamp(2rem, 3vw, 2.5rem); 
+    color: #a4a8bb;
+    margin-top: 0.3125rem; 
+    text-align: center;
+}
+
+/* #####*** CHARTS CONTAINER ***##### */
+
+
+.charts-container {
+    height: 38.65rem;
+    width: 100%;
+    margin-left: 0.5rem;
+    align-items: center;
     padding: 0.3125rem;
+    background-color: rgba(27, 95, 141, 0.06); 
+    border-radius: 0.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap:0.9375rem;
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    overflow-y: hidden;
+    box-sizing: border-box;
 
 }
+
+/* #####*** INDIVIDUAL CHARTS CONTAINER ***##### */
+
+.match-chart-container, .summary-chart-container {
+    width: 100%;
+    height: 0;
+    flex-grow: 1;
+    overflow: hidden;
+    box-sizing: border-box;
+    /* gap: 0.9375rem; */
+}
+
+/* #####*** PARAMETERS CONTAINER ***##### */
+
+.parameters-container {
+    display: flex;
+    flex-direction: columns;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    padding: 1rem;
+    background-color: rgba(27, 95, 141, 0.06);
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    margin-right: 0.5rem;
+    align-items: center;
+    justify-content: space-around;
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    width: 30.25rem;
+    /* height: 38.75rem; */
+    flex-shrink: 0;
+
+}
+
+/* #####*** SLIDERS CONTAINER ***##### */
+
+.parameter-title-container {
+    display: flex;
+    width: 100%;
+    text-align: center;
+    
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    box-sizing: border-box;
+    /* padding: 1rem; */
+   
+    
+}
+.widgets-container {
+    display: flex;
+    
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    box-sizing: border-box;
+    padding: 0.4rem;
+    margin-top: -3rem;
+    
+}
+
+
+/*### SLIDERS CONFIG ### */
 
 .input-slider .rc-slider-vertical {
-    height: 8.75rem;
-    width: 2.1875rem;
-    margin-bottom: -0.625rem;;
+    height:10.5rem;
+    width: 2rem;
 }
 
 .input-slider .rc-slider-rail {
     background-color: #a4a8bb; /* track inactivo */
     width: 0.5rem;
 }
+
 
 .input-slider .rc-slider-track {
     background-color: #1b5f8d; /* track activo */
@@ -175,31 +327,27 @@ div[data-dash-is-loading="true"]::before {
 }
 
 
-.inputs-container {
-    display: flex;
-    gap: 6.875rem;;
-    align-items: center;
-    justify-content: center;
-    padding: 0px;
-    margin-top: -5rem;
-
-}
-
+/* INPUTS CONFIG */
 
 .input-fields {
-    width: 4.375rem;
-    height: 2.5rem;
+    width: 3rem;
+    height: 2rem;
     background-color: transparent;
     border: 2px solid #1b5f8d;
     border-radius: 0.5rem;
     text-align: center;
     color: #a4a8bb;
     font-family: "DM Sans", "Noto Sans", sans-serif;
-    font-size: 1.875rem;
+    font-size: 1.25rem;
     font-weight: bold;
     outline: none;
     box-shadow: none;
-    margin-top: -3.125rem;
+    margin-top: -2rem;
+}
+
+.input-fields:focus {
+    border: 2px solid #237bb6;
+    box-shadow: 0 0 0.325rem #237bb6;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -212,10 +360,28 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-.input-fields:focus {
-    border: 2px solid #237bb6;
-    box-shadow: 0 0 0.625rem #237bb6;
+
+
+/* INPUT FIELDS TEXT CONFIG */
+
+.h3-inputs {
+    text-align: center;
+    font-size: clamp(0.75rem, 1.5vw, 1rem);
+    color: #1b5f8d;
+
+
 }
+
+.h3-inputs-units {
+    text-align: center;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    color: #1b5f8d;
+    margin-bottom: -1rem;
+}
+
+
+
+
 
 .logout-button {
     text-align: center;
@@ -251,73 +417,7 @@ transition: 0.2s ease-out
 
 }
 
-.charts-container {
-    height: auto;
-    width: 100%;
-    margin-left: 0.9375rem;
-    align-items: center;
-    padding: 0.3125rem;
-    background-color: rgba(27, 95, 141,0.05);
-    border-radius: 0.5rem;
-    flex-grow: 1; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 0.9375rem;
-    font-family: "DM Sans", "Noto Sans", sans-serif;
-    
-    
-}
-.matches-chart, .summary-chart {
-    height:clamp(150px, 30vh, 250px);
-    /* width: 100%; */
-    /* height: 250px;  */
-    font-family: "DM Sans", "Noto Sans", sans-serif; 
-    margin-left: 0;
-}
 
-.match-time-h2, .match-count-h2 {
-    margin-top: 6.25rem;
-    font-family: "DM Sans", "Noto Sans", sans-serif;
-    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
-    color: #1b5f8d;
-    margin-bottom: 0.3125rem;
-}
-.match-time-h1, .match-count-h1 {
-    margin-top: 1.5625rem;
-    font-family: "DM Sans", "Noto Sans", sans-serif;
-    font-size: clamp(1.875rem, 4vw, 3.125rem);
-}
-
-
-.data-container {
-    display: flex;
-    flex-direction: row;
-    gap: 0.625rem; 
-    align-items: flex-start;
-    
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.625rem;
-    margin-top: 0.55rem;
-}
-
-.match-time-container {
-    
-    margin-right: 1rem;
-    margin-left: 1rem;
-    margin-top: 0px;
-    flex-shrink: 0;
-    padding: 0.3125rem;
-    background-color: rgba(27, 95, 141,0.05);
-    border-radius: 0.5rem;
-    text-align: center;
-    display: block;
-    align-items: center;
-    justify-content: center;
-    height: 33.125rem;
-    width: 20%;
-    max-width: 15.625rem;
-}
 
 /* ======================================================================= */
 /* MEDIA QUERIES para Responsividad */
@@ -339,6 +439,7 @@ transition: 0.2s ease-out
     }
 
     .charts-container {
+        height:33.125rem;
         width: 100%; /* Ocupa todo el ancho disponible */
         margin-left: 0; /* Quita el margen izquierdo */
         padding: 0.5rem;
@@ -349,9 +450,9 @@ transition: 0.2s ease-out
     }
 
     .match-time-container {
-        width: 80%; /* Ocupa más ancho en móvil */
-        height: auto; /* Deja que la altura se ajuste al contenido */
-        min-height: 8rem; /* Una altura mínima razonable */
+        width: 20%; /* Ocupa más ancho en móvil */
+        height: 33.125rem;
+        min-height: 8rem;
         margin-left: 0;
         margin-right: 0;
         margin-top: 1.5rem; /* Espacio entre el gráfico de resumen y el tiempo */

@@ -203,9 +203,9 @@ def match_chart(df):
         y=elevation,
         name="Elevation",
         mode="lines",
-        line= dict(color="rgba(128,128,128,0.8)", width=2),
+        line= dict(color="rgba(128,128,128,0.8)", width=1.5),
         fill="tonexty",
-        fillcolor="rgba(128,128,128,0.3)",
+        fillcolor="rgba(128,128,128,0.1)",
         yaxis="y2",
         
     ))
@@ -216,7 +216,7 @@ def match_chart(df):
         y=power,
         mode="lines",
         name="Power",
-        line= dict(color="rgba(27, 95, 141,1.0)", width=0.8)
+        line= dict(color="#1b5f8d", width=0.8)
         
     ))
 
@@ -237,9 +237,9 @@ def match_chart(df):
         y=matches,
         mode="lines",
         name="Match",
-        line= dict(color="red", width=0.9),
+        line= dict(color="rgb(235, 44, 68)", width=0.9),
         fill="tozeroy",
-        fillcolor="rgba(255, 0, 0,0.3)"
+        fillcolor="rgba(235, 44, 68,0.2)"
     ))
 
 
@@ -256,8 +256,7 @@ def match_chart(df):
             tickfont=dict(color="rgb(161, 168, 180)",size=11)
         ),
         dragmode="zoom",
-        height=320,
-        width= 1300,
+
         xaxis_title="<b>Time</b>",
         margin=dict(l=125, r=125, t=40, b=10),
 
@@ -266,7 +265,7 @@ def match_chart(df):
 
         yaxis= dict(
             title="<b>Power (W)</b>",
-            title_font=dict(color="rgba(27, 95, 141,1.0)",size=13),
+            title_font=dict(color="#1b5f8d",size=13),
             title_standoff=40,
             side="left",
             range=[0,max(df["power"]) +200],
@@ -368,7 +367,7 @@ def match_summary_chart(array):
     fig=go.Figure(data=go.Bar(
         x=x,
         y=array,
-        marker_color="rgba(27, 95, 141,0.5)",
+        marker_color="#1b5f8d",
         name="Match", 
         hovertemplate='%{y} W')
         )
@@ -378,9 +377,9 @@ def match_summary_chart(array):
 
         color= "rgb(161, 168, 180)"
         if trend_line[0] > trend_line[-1]:
-            color= "rgb(235, 44, 68)"
+            color= "#EB2C44"
         elif trend_line[0] < trend_line[-1]:
-            color= "rgb(66, 199, 64)"
+            color= "#3AB04C"
 
         else:
             color= "rgb(161, 168, 180)"
@@ -392,7 +391,7 @@ def match_summary_chart(array):
             y=trend_line,
             mode="lines",
             name="Trend",
-            line=dict(color=color, dash="longdash"),
+            line=dict(color=color, dash="dot"),
             hovertemplate="%{y:.1f} W"
         ))
     else:
@@ -414,8 +413,6 @@ def match_summary_chart(array):
         template='plotly_dark',
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        height=190,
-        width= 1300,
         title="<b>Matches Summary</b>",
         font=dict(color="rgb(161, 168, 180)"),
         xaxis_title="<b>Matches</b>",
@@ -457,7 +454,7 @@ def match_summary_chart(array):
         spikethickness=-2,                     
         spikedash='dash')
 
-    return fig
+    return fig, trend_line
 
 
 def match_time(df):

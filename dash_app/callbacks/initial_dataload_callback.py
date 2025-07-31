@@ -14,8 +14,13 @@ def initial_load(app):
             Output("summary-chart", "figure",allow_duplicate=True),
             Output("match-time-h1", "children",allow_duplicate=True),
             Output("match-count-h1", "children",allow_duplicate=True),
-            Output("sliders-container", "style"),
-            Output("data-container", "style"),
+            Output("power-trend-h1", "children",allow_duplicate=True),
+            Output("power-trend-h1", "style"),
+            Output("gain-loss-h2", "children",allow_duplicate=True),
+            Output("gain-loss-h1", "style",allow_duplicate=True),
+            Output("gain-loss-h1", "children",allow_duplicate=True),
+            Output("main-content-area", "style"),
+            Output("summ-metrics-container", "style"),
         
             Input("file-uploader", "contents"),
 
@@ -38,21 +43,61 @@ def initial_load(app):
 
             matches_summary= compute_avg_matches(df)
             initial_match_chart=match_chart(df)
-            summary_fig=match_summary_chart(matches_summary)
+            summary_fig, trend=match_summary_chart(matches_summary)
             match_time_value= match_time(df)
             match_count= len(matches_summary)
-        
-            sliders_container_style= {
+
+            arrow_up = "▲"
+            arrow_down = "▼"
+            if len(trend) > 1:
+                delta_trend=trend[-1] - trend[0]
+                
+                if delta_trend < 0:
+                    color="#EB2C44"
+                    trend_value= f"{trend[-1] - trend[0]:.1f}W {arrow_down}"
+                    percentage= (trend[0] / trend[-1] -1) * 100
+                    percentage_value= f"{percentage:.1f}% {arrow_down}"
+                    gain_loss= "Loss %" 
+
+
+                elif delta_trend > 0:
+                    color= "#3AB04C"
+                    trend_value= f"{trend[-1] - trend[0]:.1f}W {arrow_up}" 
+                    percentage= (trend[-1] / trend[0] -1) * 100
+                    percentage_value= f"{percentage:.1f}% {arrow_up}"
+                    gain_loss= "Gain %" 
+                else:
+                    color="#a4a8bb"
+
+            else:
+                color="#a4a8bb"
+                trend_value="--"
+                gain_loss="Gain/Loss %:"
+                percentage_value="--"
+
+
+            data_container_style={
+                "display":"flex",
+                "transition": "0.2s ease-in"
+            }
+            summ_metrics_container= {
                 "display":"flex",
                 "transition":"0.2s ease-out"
             }
 
-            data_container_style={
-                "display":"flex",
-                "flex-direction":"row",
-                "transition": "0.2s ease-in"
-            }
+            power_trend_style= {"color": color}
 
-            return data, initial_match_chart, summary_fig, match_time_value,match_count, sliders_container_style,  data_container_style
+            gain_loss_style= {"color":color}
+
+            return data, initial_match_chart, summary_fig, match_time_value, match_count, trend_value, power_trend_style, gain_loss, gain_loss_style, percentage_value, data_container_style, summ_metrics_container
         else:
             raise PreventUpdate
+
+
+
+
+
+
+
+
+
