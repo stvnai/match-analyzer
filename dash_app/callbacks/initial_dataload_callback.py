@@ -1,5 +1,5 @@
 from garmin_fit_sdk import Stream, Decoder
-from dash_app.matchanalyzer import extract_data,  match_marker, match_chart,match_time,compute_avg_matches,match_summary_chart
+from dash_app.matchanalyzer import extract_data,  match_marker, match_chart, summ_metric_values, match_time,compute_avg_matches,match_summary_chart
 from dash.exceptions import PreventUpdate
 
 from dash import Input, Output, State
@@ -46,34 +46,7 @@ def initial_load(app):
             summary_fig, trend=match_summary_chart(matches_summary)
             match_time_value= match_time(df)
             match_count= len(matches_summary)
-
-            arrow_up = "▲"
-            arrow_down = "▼"
-            if len(trend) > 1:
-                delta_trend=trend[-1] - trend[0]
-                
-                if delta_trend < 0:
-                    color="#EB2C44"
-                    trend_value= f"{trend[-1] - trend[0]:.1f}W {arrow_down}"
-                    percentage= (trend[0] / trend[-1] -1) * 100
-                    percentage_value= f"{percentage:.1f}% {arrow_down}"
-                    gain_loss= "Loss %" 
-
-
-                elif delta_trend > 0:
-                    color= "#3AB04C"
-                    trend_value= f"{trend[-1] - trend[0]:.1f}W {arrow_up}" 
-                    percentage= (trend[-1] / trend[0] -1) * 100
-                    percentage_value= f"{percentage:.1f}% {arrow_up}"
-                    gain_loss= "Gain %" 
-                else:
-                    color="#a4a8bb"
-
-            else:
-                color="#a4a8bb"
-                trend_value="--"
-                gain_loss="Gain/Loss %:"
-                percentage_value="--"
+            color, trend_value, gain_loss, percentage_value= summ_metric_values(trend)
 
 
             data_container_style={

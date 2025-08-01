@@ -1,6 +1,6 @@
 
 from dash import Input, Output, State, callback
-from dash_app.matchanalyzer import match_marker, compute_avg_matches, match_chart, match_summary_chart, match_time
+from dash_app.matchanalyzer import match_marker, compute_avg_matches, match_chart, match_summary_chart, match_time, summ_metric_values
 
 def update_data_app(app):
     
@@ -79,41 +79,14 @@ def update_data_app(app):
     )
 
     def update_charts_data(power, match_length, rest, tolerance, data):
+
         df= match_marker(data, power, match_length, rest, tolerance)
         matches_summary= compute_avg_matches(df)
         matches_fig= match_chart(df)
         summary_fig, trend=match_summary_chart(matches_summary)
         match_time_value= match_time(df)
         match_count= len(matches_summary)
-
-        arrow_up = "▲"
-        arrow_down = "▼"
-        if len(trend) > 1:
-            delta_trend=trend[-1] - trend[0]
-            
-            if delta_trend < 0:
-                color="#EB2C44"
-                trend_value= f"{trend[-1] - trend[0]:.1f}W {arrow_down}"
-                percentage= (trend[0] / trend[-1] -1) * 100
-                percentage_value= f"{percentage:.1f}% {arrow_down}"
-                gain_loss= "Loss %" 
-
-
-            elif delta_trend > 0:
-                color= "#3AB04C"
-                trend_value= f"{trend[-1] - trend[0]:.1f}W {arrow_up}" 
-                percentage= (trend[-1] / trend[0] -1) * 100
-                percentage_value= f"{percentage:.1f}% {arrow_up}"
-                gain_loss= "Gain %" 
-            else:
-                color="#a4a8bb"
-
-        else:
-            color="#a4a8bb"
-            trend_value="--"
-            gain_loss="Gain/Loss %:"
-            percentage_value="--"
-            
+        color, trend_value, gain_loss, percentage_value= summ_metric_values(trend)
 
         power_trend_style= {"color": color}
 

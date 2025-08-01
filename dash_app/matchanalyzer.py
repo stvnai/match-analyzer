@@ -463,3 +463,44 @@ def match_time(df):
     total_time= str(match_time_formated).split(" ")[-1]
 
     return total_time
+
+
+def summ_metric_values(array):
+    
+    arrow_up = "▲"
+    arrow_down = "▼"
+
+    color="#a4a8bb"
+    trend_value="--"
+    gain_loss="Gain/Loss %:"
+    percentage_value="--"
+
+    if len(array) < 2:
+        return color, trend_value, gain_loss, percentage_value
+
+
+    try:
+        delta_trend= array[-1] - array[0]
+
+        if delta_trend < 0:
+
+            color="#EB2C44"
+            trend_value= f"{array[-1] - array[0]:.1f}W {arrow_down}"
+
+            percentage= (array[0] / array[-1] - 1) * 100
+            percentage_value= f"{percentage:.1f}% {arrow_down}"
+            gain_loss= "Loss %" 
+
+        elif delta_trend > 0:
+
+            color= "#3AB04C"
+            trend_value= f"{array[-1] - array[0]:.1f}W {arrow_up}"
+
+            percentage= (array[-1] / array[0] - 1) * 100
+            percentage_value= f"{percentage:.1f}% {arrow_up}"
+            gain_loss= "Gain %" 
+
+    except Exception as e:
+        return color, trend_value, gain_loss, percentage_value
+
+    return color, trend_value, gain_loss, percentage_value

@@ -26,11 +26,11 @@ uploader_component= dcc.Upload(
                 html.A("click to browse.", style= {"font-weight":"bold"})
             ],
             style_reject={
-        'borderStyle': 'dashed', # Mismo estilo de borde que el normal
-        'borderColor': '#1b5f8d', # Mismo color de borde que el normal
-        'backgroundColor': 'rgba(27, 95, 141, 0.05)', # Mismo fondo que el normal
-        'color': '#a4a8bb', # Mismo color de texto que el normal
-        'opacity': '0.8' # Asegura que no se vuelva transparente si Dash lo hace por defecto
+        'borderStyle': 'dashed',
+        'borderColor': '#1b5f8d', 
+        'backgroundColor': 'rgba(27, 95, 141, 0.05)',
+        'color': '#a4a8bb',
+        'opacity': '0.8'
     }
 )
 
@@ -56,7 +56,7 @@ match_time_container= html.Div(
     className= "match-time-container",
     children= [
         html.H2(
-            "Match Time:",
+            "Match Time",
             id= "match-time-h2",
             className= "summ-metrics-h2"),
         html.H1(
@@ -71,7 +71,7 @@ match_count_container= html.Div(
     className= "match-count-container",
     children= [
         html.H2(
-            "Match Count:",
+            "Match Count",
             id= "match-count-h2",
             className= "summ-metrics-h2"),
         html.H1(
@@ -86,7 +86,7 @@ power_trend_container= html.Div(
     className= "power-trend-container",
     children= [
         html.H2(
-            "Power Trend:",
+            "Power Trend",
             id= "power-trend-h2",
             className= "summ-metrics-h2"),
         html.H1(
@@ -101,11 +101,11 @@ gain_loss_container= html.Div(
     className= "gain-loss-container",
     children= [
         html.H2(
-            "None:",
+            "--",
             id= "gain-loss-h2",
             className= "summ-metrics-h2"),
         html.H1(
-            "0%",
+            "--",
             id= "gain-loss-h1",
             className= "summ-metrics-h1")
     ]
@@ -260,7 +260,7 @@ h3_rest= html.H3(
     className="h3-inputs"
 )
 h3_tolerance= html.H3(
-    "% Compliance",
+    "Compliance",
     id="h3-tolerance",
     className="h3-inputs"
 )
@@ -359,7 +359,6 @@ parameters_container= html.Div(
         rest_container,
         tolerance_container
     ]
-
 )
 
 
@@ -396,7 +395,7 @@ data_area_container= html.Div(
     id= "data-area-container",
     className= "data-area-container",
     children= [
-        # summ_metrics_container,
+
         charts_container
     ]
 )
@@ -435,79 +434,6 @@ main_container= html.Div(id="main-container",
                          ]
 )
 
-
-
-
-# app.layout = html.Div(
-#     className="title_container",
-#     id="title_container",
-#     children=[
-#         html.H1(
-#             "Match Analyzer",className="h1-title"),
-#         html.H2(
-#             "Upload .FIT file to extract matches",className="h2-title"),
-#         dcc.Upload(
-#             id="file-uploader",
-#             multiple=False,
-#             children=html.Div("Select or Drag and Drop File",className="dash-uploader"),
-#                 style={
-#                     "display": "flex",
-#                     "align-items": "center",
-#                     "justify-content": "center",
-#                     "height": "80px",
-#                     "width": "500px",
-#                     "padding": "0px",
-#                     "border": "2px solid #1b5f8d",
-#                     "border-radius": "25px",
-#                     "background-color": "transparent",
-#                     "cursor":"pointer",
-#                     "transition": "0.2s ease-out",
-#                     "scale": "1.0"
-#                     },
-
-                    
-
-#                 style_active={
-#                     'background-color': 'transparent',
-#                     'border': "2px dashed #1b5f8d",
-#                     "border-radius":"25px",
-#                     "scale": "1.04",
-#                     "transition": "0.2s ease-in"
-#                     }
-#                 )
-#     ])
-
-# app.layout= html.Div(
-#     id="slider-container",
-#     className="slider-container",
-#     children= [
-#         dcc.Slider(
-#             id="power-slider",
-#             value=120,
-#             min=120,
-#             max=1200,
-#             marks={i: str(i) for i in range(120, 1201, 360)}
-#         )
-#     ])
-
-# @app.callback(
-#     Output("live-matches-graph", "figure"),
-#     Input("slider-power", "value")
-# )
-# def update_graph(slider_value):
-#     x= np.linspace(0,100, 100)
-#     y= np.full_like(x,slider_value)
-
-#     figure= go.Figure (data=[go.Scatter(
-#             x=x,
-#             y=y,
-#             mode="lines",
-#             line= dict(color="crimson", width=2),
-#             name="Power point"
-#         )])
-    
-#     figure.update_layout(title= f"Power= {slider_value}")
-#     return figure
 
 
 
