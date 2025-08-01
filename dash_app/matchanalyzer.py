@@ -19,77 +19,167 @@ def extract_data(file):
     Return:
         (tuple): data_df, metadata_df, csv_filename, filepath
     '''
-    columns= [
-    "date","elapsed_time","position_lat","position_long",
-    "distance","elevation","speed","power","accumulated_power","heart_rate",
-    "cadence","work","w_kg","kj_kg"
-    ]
+    data_schema= {
+        
+        'elapsed_time': 'string',
+        'distance': 'Float64',
+        'elevation': 'Float64',
+        'speed': 'Float64',
+        'power': 'Int64',
+        'heart_rate': 'Int64',
+        'accumulated_power': 'Int64',
+        'work': 'Float64',
+        'w_kg': 'Float64',
+        'kj_kg': 'Float64',
+    }
+
+    filename= os.path.basename(file)
+
+    data_cols= list(data_schema.keys())
+    data_df= pd.DataFrame(columns=list(data_schema.keys())).astype(data_schema)
+
+
+    raw_data_df=pd.DataFrame()
 
     try:
-        content_type, content_string = file.split(',')
+        _, content_string = file.split(',')
         decoded_bytes = base64.b64decode(content_string)
         data= io.BytesIO(decoded_bytes)
 
         stream= Stream.from_bytes_io(data)
         decoder= Decoder(stream)
-
         messages,_= decoder.read()
-
-    except Exception as e:
-        print(f"FATAL ERROR: Unable to read data from {file}: {e}")
-        return
-
-    try:
+        messages_keys= list(messages.keys())
         
-        filedate= messages["record_mesgs"][0]["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
     except Exception as e:
-        print(f"Error with date in extract_data function: {e}. Date set to 1900-10-17")
-        filedate= "1900-10-17"
-    try:
-        weight = messages.get('user_profile_mesgs',[{}])[0].get('weight',1)
-    except Exception as e:
+        print(f"CRITICAL ERROR: Unable to read data from {filename}: {e}.")  
 
-        print(f"Error in extract_data function {e}: Weight se to 1")
-        weight=1
+        return raw_data_df
+    
+    weight=60
+    if "user_profile_mesgs" in messages_keys:
+        try:
+            weight = messages.get('user_profile_mesgs',[{}])[0].get('weight',60)
+        except Exception as e:
+            print(f"Error in extract_data function {e}: Weight set to 60kg")
+            weight=60
 
-    try:
-        data = messages.get("record_mesgs",[])
-        if not data:
-            print(f"WARNING: No data in {file}")
-            data_df= pd.DataFrame()
+    if "record_mesgs" in messages_keys:
 
-        data_df=pd.DataFrame(data)
+        try:
+            raw_data= messages.get('record_mesgs')
+            raw_data_df= pd.DataFrame(raw_data)
+        except Exception as e:
+            print(f"Error building raw data dataframe from {filename}. Data will be empty {e}.")
+            return raw_data_df
+        
+    ##### CHECK FOR ACCUMULATED POWER AVAILABLE #####
 
-    except Exception as e:
-        print(f"Error extracting records from file. DataFrame will be empty {file}: {e}")
-        data_df=pd.DataFrame()
-        data_df= data_df.convert_dtypes()
+    if "accumulated_power" not in raw_data_df.columns:
+        try:
+            raw_data_df["accumulated_power"] = (raw_data_df["power"].cumsum() / 1000).round().astype("Int64")
+        except Exception as e:
+            print(f"No power data to create accumulated power column from {filename}")
 
 
+##### POPULATE DATA DATAFRAME WITH INITIAL RAW DATA #####
 
-    if  data_df.empty:
-        print(f"WARNING: No data in DataFrame. Returning empty DataFrame")
-        data_df=pd.DataFrame(columns)
+    raw_data_cols= raw_data_df.columns.to_list()
+    for r_col in raw_data_cols:
+        if r_col in data_cols:
+            data_df[r_col]= raw_data_df[r_col]
+
+# ELAPSED TIME
+
+    data_df["elapsed_time"]= pd.to_datetime(range(len(raw_data_df)), unit="s").strftime("%H:%M:%S").astype("string")
+
+## DISTANCE
+
+    if "distance" in raw_data_cols:
+
+        try:
+            data_df["distance"]= (raw_data_df["distance"] / 1000).round(3).astype("Float64")
+        except (ValueError, TypeError) as e:
+            print(f"Error converting distance data from {filename}: {e}.")
 
     else:
-
-        data_df["elapsed_time"]= pd.to_datetime(range(len(data_df)), unit="s").strftime("%H:%M:%S")
-
-        data_df["speed"] = np.round(data_df.get("enhanced_speed", np.nan) * 3.6,4)
-        data_df["distance"] = np.round(data_df.get("distance", np.nan) / 1000,3)
-        data_df["work"]= np.round(data_df.get("accumulated_power", np.nan)/1000,2)
-        data_df["elevation"] = np.round(data_df.get("altitude", np.nan),2)
+        print(f"No data found for distance in {filename}.") 
 
 
-        if weight:
-            data_df["w/kg"] = np.round(data_df.get("power",np.nan) / weight,2)
-            data_df["kj/kg"]= np.round(data_df.get("accumulated_power", np.nan)/1000,2)
+## ELEVATION
+
+    if "altitude" in raw_data_cols:
+        
+        try:
+            data_df["elevation"]= (raw_data_df["altitude"]).round(1).astype("Float64")
+        except (ValueError, TypeError) as e:
+            print(f"Error converting elevation data from {filename}: {e}.")
+
+    elif "enhanced_altitude" in raw_data_cols:
+
+        try:
+            data_df["elevation"]= (raw_data_df["enhanced_altitude"]).round(1).astype("Float64")
+        except (ValueError, TypeError) as e:
+            print(f"Error converting elevation data from {filename}: {e}.")
+
+    else:
+        print(f"No data found for elevation in {filename}.") 
 
 
-    for col in columns:
-        if col not in data_df.columns:
-            data_df[col]= np.nan
-    data_df = data_df[columns].copy()
+## SPEED
+
+    if "speed" in raw_data_cols:
+
+        try:
+            data_df["speed"]= (raw_data_df["speed"] * 3.6).round(2).astype("Float64")
+        except (ValueError, TypeError) as e:
+            print(f"Error with speed data from {filename}: {e}.")
+
+    elif "enhanced_speed" in raw_data_cols:
+
+        try:
+            data_df["speed"]= (raw_data_df["enhanced_speed"] * 3.6).round(2).astype("Float64")
+        except (ValueError, TypeError) as e:
+            print(f"Error converting enhanced speed data from {filename}: {e}.") 
+
+    else:
+        print(f"No data found for speed in {filename}.")
+
+##### ADITIONAL/DERIVATED METRICS #####
+
+## WORK
+
+    if "accumulated_power" in raw_data_cols:
+        
+        try:
+            data_df["work"]= ((raw_data_df["accumulated_power"] / 1000)).round(2).astype("Float64")
+        except (ValueError, TypeError) as e:
+            print(f"Error converting work data from {filename}: {e}.")
+
+    else:
+        print(f"No data found for work in {filename}.")
+
+
+## WEIGHT RELATED METRICS
+
+    if weight:
+
+        try:    
+            if "accumulated_power" in raw_data_cols:
+                data_df["kj_kg"]= (raw_data_df["accumulated_power"] / 1000 / weight).round(2).astype("Float64")
+        except (ValueError, TypeError) as e:
+            print(f"Error converting kj_kg data from {filename}: {e}.")
+
+        try:
+            if "power" in raw_data_cols:
+                data_df["w_kg"]= (raw_data_df["power"] / weight).round(2).astype("Float64")
+        except (ValueError, TypeError) as e:
+            print(f"Error converting w_kg data {filename}: {e}.")
+        
+    else:
+        print(f"No data found for kj/kg and w/kg in {filename}.")
+
+
 
     df_processed= data_df.to_dict("records")
 

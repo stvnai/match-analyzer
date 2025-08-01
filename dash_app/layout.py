@@ -131,7 +131,7 @@ summ_metrics_container= html.Div(
 power_slider= dcc.Slider(
     id="power-slider",
     className="input-slider",
-    value=200,
+    value=250,
     min=200,
     max=1200,
     marks={
@@ -149,8 +149,8 @@ power_slider= dcc.Slider(
 match_length_slider= dcc.Slider(
     id="match-length-slider",
     className="input-slider",
-    value=10,
-    min=10,
+    value=15,
+    min=5,
     max=600,
     step=5,
     marks={
@@ -170,7 +170,7 @@ rest_slider= dcc.Slider(
     id="rest-slider",
     className="input-slider",
     value=10,
-    min=10,
+    min=5,
     max=600,
     step=5,
         marks={
@@ -190,7 +190,7 @@ rest_slider= dcc.Slider(
 tolerance_slider= dcc.Slider(
     id="tolerance-slider",
     className="input-slider",
-    value=90,
+    value=95,
     min=50,
     max=100,
     step=1,
@@ -210,7 +210,7 @@ power_input= dcc.Input(
     id="power-input",
     className="input-fields",
     type="number",
-    value=200,
+    value=250,
     min=200,
     max=1200
 
@@ -219,8 +219,8 @@ match_length_input= dcc.Input(
     id="match-length-input",
     className="input-fields",
     type="number",
-    value=10,
-    min=10,
+    value=15,
+    min=5,
     max=600,
 
 )
@@ -230,7 +230,7 @@ rest_input= dcc.Input(
     className="input-fields",
     type="number",
     value=10,
-    min=10,
+    min=5,
     max=600,
 
 )
@@ -238,7 +238,7 @@ tolerance_input= dcc.Input(
     id="tolerance-input",
     className="input-fields",
     type="number",
-    value=90,
+    value=95,
     min=50,
     max=100,
 
@@ -255,7 +255,7 @@ h3_match_length= html.H3(
     className="h3-inputs"
 )
 h3_rest= html.H3(
-    "Rest Time",
+    "Max Rest",
     id="h3-rest",
     className="h3-inputs"
 )
