@@ -18,7 +18,7 @@ body {
 .main-container {
     display: flex; 
     flex-direction: column;
-    flex-grow: 1; /*cambio prueba*/
+    flex-grow: 1; 
     min-height: 100vh;
     box-sizing: border-box;
     padding: 1rem;
@@ -30,14 +30,11 @@ body {
     top: 1.25rem;
     right: 1.25rem;
     height: 2.5rem;
-    width: 100px;
+    width: 8rem;
     border: 2px solid #237bb62a;
-    border-radius: 0.75rem; /* 15px */
-    background-color: rgba(27, 95, 141, 0.07);
-    
-    /* background-color: #113c58; */
+    border-radius: 0.75rem; 
+    background-color: rgba(27, 95, 141, 0.1); 
     color: #a4a8bb;
-
     font-family: "DM Sans", sans-serif;
     font-size: 0.875rem;
     font-weight: bold;
@@ -49,19 +46,14 @@ body {
 
 .logout-button:hover{
     color: #237bb6;
-    background-color: #237bb62a;
-
+    background-color: rgba(27, 95, 141, 0.2);
     transition: 0.2s ease-in-out;
 }
 
 .logout-button:active {
-transform: scale(0.98);
-transition: 0.2s ease-out
-
+    transform: scale(0.98);
+    transition: 0.2s ease-out
 }
-
-
-
 
 
 /* #####*** HEADER CONTAINER ***##### */
@@ -71,11 +63,10 @@ transition: 0.2s ease-out
     display: flex;
     align-items: left;
     justify-content: left;
-    padding: 1.25rem 1rem;
+    padding: 0.5rem 1rem;
     background-color: #10121d39;
     border-bottom: 1px solid #113c58;
 }
-
 
 .title_container {
     display: flex;
@@ -85,31 +76,26 @@ transition: 0.2s ease-out
     width: 100%;
     min-height: 5rem;
     max-width: 31.25rem;
-    margin-bottom: 0.5rem;
 }
 
 .h1-title {
-    font-size: clamp(2.5rem, 5vw, 3.75rem); /* min: 40px, preferred: 5vw, max: 60px */
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
     text-align: center;
-    /* margin-left: 0.625rem; */
-    margin-top: -0.625rem;
-    margin-bottom: 0.625rem;
+    margin-top: 0rem;
     color: #a4a8bb;
 }
 
-
-.dash-uploader-area {
-    
+.dash-uploader-area { 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 3.75rem; /* 60px */
-    width: 95%; /* Ancho responsivo */
+    height: 3.75rem; 
+    width: 100%; 
     padding: 0.7rem;
-    border: 2px solid rgba(27, 95, 141, 0.05);
+    border: 2px solid rgba(27, 95, 141, 0.1);
     border-radius: 0.75rem; /* 15px */
-    background-color: rgba(27, 95, 141, 0.05);
+    background-color: rgba(27, 95, 141, 0.1);
     cursor: pointer;
     font-size: 1rem;
     color:#a4a8bb;
@@ -118,14 +104,10 @@ transition: 0.2s ease-out
     transition: 0.2s ease-out;
 }
 
-
 .dash-uploader-area:hover {
     color:#a4a8bb;
-    background-color: #237bb62a;
-    /* border: 2px solid transparent; */
+    background-color: rgba(27, 95, 141, 0.2);
     transition: 0.2s ease-in;
-    
-    /* font-weight: bold; */
 }
 
 .dash-uploader-area p {
@@ -135,12 +117,11 @@ transition: 0.2s ease-out
 .dash-uploader-area a {
     color: #237bb6;
     font-weight: bold;
-    text-decoration: none; /* Quita el subrayado por defecto */
+    text-decoration: none; 
 }
 .dash-uploader-area a:hover {
-    /* color: #126971; */
     font-weight: bold;
-    text-decoration: none; /* Quita el subrayado por defecto */
+    text-decoration: none; 
 }
 
 ._dash-undo-redo {
@@ -152,12 +133,6 @@ div[data-dash-is-loading="true"]::before {
     display: none !important;
 }
 
-.dash-uploader-area.dash-uploader--reject {
-    border-color: transparent !important; /* Fuerza el borde transparente */
-    background-color: transparent !important; /* Fuerza el fondo transparente */
-    color: #a4a8bb !important; /* Fuerza el color de texto normal */
-    /* Puedes añadir !important a otras propiedades si Dash las está sobrescribiendo */
-}
 
 /* #####*** MAIN CONTENT AREA ***##### */
 
@@ -170,10 +145,10 @@ div[data-dash-is-loading="true"]::before {
     box-sizing: border-box;
 }
 
+
 /* #####*** SUMMARY METRICS + CHARTS CONTAINER ***##### */
 
 .data-area-container {
-    /* height: 38.65rem; */
     display: flex;
     flex-direction: column;
     gap:1.25rem;
@@ -181,6 +156,7 @@ div[data-dash-is-loading="true"]::before {
     min-width: 0;
     box-sizing: border-box;
 }
+
 
 /* #####*** SUMMARY METRICS CONTAINER ***##### */
 
@@ -198,6 +174,7 @@ div[data-dash-is-loading="true"]::before {
     width: 100%;
 }
 
+
 /* #####*** INDIVIDUAL METRICS CONTAINERS ***##### */
 
 .match-time-container,
@@ -208,7 +185,6 @@ div[data-dash-is-loading="true"]::before {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     background-color: rgba(27, 95, 141, 0.06); 
     border-radius: 0.5rem;
     min-width: 10rem; 
@@ -220,8 +196,7 @@ div[data-dash-is-loading="true"]::before {
 
 .summ-metrics-h2 {
     font-family: "DM Sans", "Noto Sans", sans-serif;
-
-    font-size: clamp(1.25rem, 1.25vw, 1.5rem); /* Escala de 16px a 20px */
+    font-size: clamp(1.25rem, 1.25vw, 1.5rem);
     color: #1b5f8d;
     margin-bottom: -0.45rem;
     text-align: center;
@@ -234,15 +209,14 @@ div[data-dash-is-loading="true"]::before {
     text-align: center;
 }
 
-/* #####*** CHARTS CONTAINER ***##### */
 
+/* #####*** CHARTS CONTAINER ***##### */
 
 .charts-container {
     height: 38.65rem;
     width: 100%;
     margin-left: 0.5rem;
     align-items: center;
-    /* padding: 1rem; */
     background-color: rgba(27, 95, 141, 0.06); 
     border-radius: 0.5rem;
     flex-grow: 1;
@@ -252,19 +226,20 @@ div[data-dash-is-loading="true"]::before {
     font-family: "DM Sans", "Noto Sans", sans-serif;
     overflow-y: hidden;
     box-sizing: border-box;
+    padding: 1.5rem;
 
 }
+
 
 /* #####*** INDIVIDUAL CHARTS CONTAINER ***##### */
 
 .match-chart-container, .summary-chart-container {
     width: 95%;
-    
     flex-grow: 1;
     overflow: hidden;
     box-sizing: border-box;
-    /* gap: 0.9375rem; */
 }
+
 
 /* #####*** PARAMETERS CONTAINER ***##### */
 
@@ -272,7 +247,7 @@ div[data-dash-is-loading="true"]::before {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 0.8rem;
+    gap: 0.2rem;
     padding: 1rem;
     background-color: rgba(27, 95, 141, 0.06);
     border-radius: 0.5rem;
@@ -286,22 +261,20 @@ div[data-dash-is-loading="true"]::before {
 
 }
 
+
 /* #####*** SLIDERS CONTAINER ***##### */
 
 .parameter-title-container {
     display: flex;
     width: 100%;
     text-align: center;
-    
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.05rem;
+    /* gap: 0.05rem; */
     box-sizing: border-box;
-    /* padding: 1rem; */
-   
-    
 }
+
 .widgets-container {
     display: flex;
     
@@ -311,7 +284,7 @@ div[data-dash-is-loading="true"]::before {
     gap: 0.1rem;
     box-sizing: border-box;
     padding: 0.4rem;
-    margin-top: -8rem;
+    margin-top: -15rem;
     
 }
 
@@ -324,13 +297,13 @@ div[data-dash-is-loading="true"]::before {
 }
 
 .input-slider .rc-slider-rail {
-    background-color: #a4a8bb; /* track inactivo */
+    background-color: #a4a8bb;
     width: 0.5rem;
 }
 
 
 .input-slider .rc-slider-track {
-    background-color: #1b5f8d; /* track activo */
+    background-color: #1b5f8d;
     width: 0.5rem;
 }
 
@@ -364,8 +337,8 @@ div[data-dash-is-loading="true"]::before {
     transform: translateY(-65%);
 }
 
-
 /* INPUTS CONFIG */
+
 
 .input-fields {
     width: 3rem;
@@ -399,15 +372,12 @@ input[type="number"] {
 }
 
 
-
 /* INPUT FIELDS TEXT CONFIG */
 
 .h3-inputs {
     text-align: center;
     font-size: clamp(0.75rem, 1.5vw, 1rem);
     color: #1b5f8d;
-
-
 }
 
 .h3-inputs-units {
@@ -420,7 +390,7 @@ input[type="number"] {
           /* ############################################################################ */
 /* #####################################     MEDIA     ####################################### */
 
-@media (max-width: 75rem) { /* 768px convertido a rem */
+@media (max-width: 75rem) { 
 
     body {
         flex-direction: column;
@@ -428,36 +398,52 @@ input[type="number"] {
         gap: 1.5rem;
     }
 
-      .logout-button {
+    .logout-button {
         position: static;
         margin: 0.5rem auto;
-        width: 80%;
+        width: 40%;
+        height: 2rem;
     }
 
-    .header-container {flex-direction: column;
+    .header-container {
+        gap: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 1rem;
+        justify-content: center;
         position: static;
-        margin: 0.2rem auto;
+        margin: 1rem auto;
         width: 90%;
     }
+
 
     .h1-title {
         font-size: clamp(2rem, 4vw, 3.25rem);
         text-align: center;
-        margin-top: -0.8rem;
-        margin-bottom: 0.3rem;
+        margin-top: -0.5rem;
+        margin-bottom: 0rem;
         color: #a4a8bb;
     }
 
+    .dash-uploader-area p {
+        display: none;
+    }
+
     .dash-uploader-area {
-        height: 2.5rem;
+        width: 15rem;
+        text-align: center;
+        position: static;
+        height: 2rem;
+        padding: 0.5rem 0;
+        margin-bottom: 0.8rem;
+        box-sizing: border-box; 
     }
 
     .summ-metrics-container {
-        
         display: flex;
         flex-wrap: wrap;
         gap: 0.2rem;
-        /* max-width: none; */
         padding: 0 1rem;
         box-sizing: border-box;
         justify-content: center;
@@ -485,15 +471,9 @@ input[type="number"] {
         box-sizing: border-box;
     }
 
-
-
     .input-slider {
         display: none;
     }
-
-        /* .h3-inputs-units {
-        display: none;
-    } */
 
     .parameter-title-container {
         margin-bottom: 1.5rem;
@@ -518,7 +498,6 @@ input[type="number"] {
         display: flex;
         flex-direction: row; 
         align-items: center;
-        /* justify-content: space-between; */
         width: 100%;
         max-width: 20rem;
         padding: 0.75rem 1rem;
@@ -528,12 +507,9 @@ input[type="number"] {
     }
 
     .h3-inputs-units {
-            width: 4%;
-            margin-top: -18%;
-        /* display: none; */
-
+        width: 4%;
+        margin-top: -18%;
     }
-
 
     .input-fields {
         align-items: flex-start;
@@ -542,7 +518,6 @@ input[type="number"] {
     }
 
     .h3-inputs {
-        
         font-size: 0.875rem;
         margin-right: auto;
         flex-shrink: 0;
@@ -552,13 +527,7 @@ input[type="number"] {
     }
 
     .charts-container {
-        display: none; /* Ocultamos los gráficos */
+        display: none; 
     }
 
-    /* .dash-uploader {
-        width: 90%;
-        max-width: none;
-    } */
-
-  
 }

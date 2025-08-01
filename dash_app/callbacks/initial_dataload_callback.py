@@ -23,6 +23,7 @@ def initial_load(app):
             Output("summ-metrics-container", "style"),
         
             Input("file-uploader", "contents"),
+            Input("file-uploader", "filename"),
 
             State("power-input", "value"),
             State("match-length-input", "value"),
@@ -33,11 +34,12 @@ def initial_load(app):
         
     )
     
-    def process_file_and_initialize_charts(file, power, match_length, rest, tolerance):
+    def process_file_and_initialize_charts(file_content, filename, power, match_length, rest, tolerance):
 
-        if file:
-       
-            data= extract_data(file)
+        filetype= filename.endswith(".fit") or filename.endswith(".FIT")
+        if file_content and filetype:
+
+            data= extract_data(file_content)
 
             df=match_marker(data, power, match_length, rest, tolerance)
 
@@ -63,6 +65,7 @@ def initial_load(app):
             gain_loss_style= {"color":color}
 
             return data, initial_match_chart, summary_fig, match_time_value, match_count, trend_value, power_trend_style, gain_loss, gain_loss_style, percentage_value, data_container_style, summ_metrics_container
+        
         else:
             raise PreventUpdate
 

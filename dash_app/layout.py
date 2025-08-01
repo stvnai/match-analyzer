@@ -22,8 +22,8 @@ uploader_component= dcc.Upload(
             multiple= False,
             accept=".FIT, .fit",
             children= [
-                html.P("Drag and drop .FIT file here or"),
-                html.A("click to browse.", style= {"font-weight":"bold"})
+                html.P("Drag and drop or"),
+                html.A("click to browse .FIT file", style= {"font-weight":"bold"})
             ],
             style_reject={
         'borderStyle': 'dashed',
