@@ -5,7 +5,6 @@ from flask import redirect, request, url_for
 
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
-from dotenv import load_dotenv
 from .models import User
 from .db.db_connections import get_user_by_id
 
@@ -14,10 +13,6 @@ from dash_app.layout import main_container
 from dash_app.callbacks.update_data_callback import update_data_app
 from dash_app.callbacks.initial_dataload_callback import initial_load
 from dash_app.callbacks.logout_callback import log_out
-
-
-load_dotenv()
-
 
 
 token= os.getenv("SECRET_TOKEN")

@@ -1,11 +1,9 @@
 import os
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy import Engine
 from werkzeug.security import check_password_hash
 
-load_dotenv()
 
 def get_sqlalchemy_engine():
     dbname= os.getenv("DB_NAME")
