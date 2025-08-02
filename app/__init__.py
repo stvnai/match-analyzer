@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from flask import Flask
 from flask_login import current_user
 from flask import redirect, request, url_for
@@ -54,7 +55,7 @@ def create_flask_app():
 
 def create_dash_app(flask_app_server):
 
-    assets_path = r"H:\AI-Projects\match-analizer\dash_app\assets"
+    assets_path = Path(__file__).parent.parent / "dash_app" / "assets"
 
     dash_app= Dash(
         name="MatchAnalyzer",
