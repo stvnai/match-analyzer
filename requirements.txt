@@ -10,6 +10,7 @@ Flask-Login==0.6.3
 Flask-WTF==1.2.2
 garmin-fit-sdk==21.178.0
 greenlet==3.2.3
+gunicorn==23.0.0
 idna==3.10
 importlib_metadata==8.7.0
 itsdangerous==2.2.0
