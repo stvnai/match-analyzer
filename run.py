@@ -2,9 +2,9 @@ from app import create_flask_app, create_dash_app
 import os
 
 
-flask_app= create_flask_app()
-dash_app= create_dash_app(flask_app)
+app= create_flask_app()
+dash_app= create_dash_app(app)
 
 if __name__ == "__main__":
 
-    flask_app.run(host="0.0.0.0", port=8020)
+    app.run(host="0.0.0.0", port=8020)
