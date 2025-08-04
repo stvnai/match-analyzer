@@ -3,10 +3,6 @@ from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy import Engine
 from werkzeug.security import check_password_hash
-from dotenv import load_dotenv
-load_dotenv()
-
-
 
 def get_sqlalchemy_engine() -> Engine:
 
