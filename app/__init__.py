@@ -15,6 +15,7 @@ from dash_app.callbacks.update_data_callback import update_data_app
 from dash_app.callbacks.initial_dataload_callback import initial_load
 from dash_app.callbacks.logout_callback import log_out
 
+
 token= os.getenv("SECRET_TOKEN")
 login_manager = LoginManager()
 csrf = CSRFProtect()
