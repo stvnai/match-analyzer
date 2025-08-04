@@ -3,10 +3,22 @@ from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy import Engine
 from werkzeug.security import check_password_hash
+from dotenv import load_dotenv
+load_dotenv()
 
 
 
-def get_sqlalchemy_engine():
+def get_sqlalchemy_engine() -> Engine:
+
+    """
+    Description:
+    -----
+        Returns a sqlalchemy engine connected to PostgreSQL database.
+
+    :return Engine: sqlalchemy engine.
+    
+
+    """
     dbname= os.getenv("DB_NAME")
     user= os.getenv("DB_USER")
     password= os.getenv("DB_PASS")
@@ -15,7 +27,7 @@ def get_sqlalchemy_engine():
 
     db_url= f"postgresql+psycopg://{user}:{password}@{host}:{port}/{dbname}"
 
-    return create_engine(
+    engine= create_engine(
         db_url,
         echo=False,
         future=True,
@@ -31,6 +43,8 @@ def get_sqlalchemy_engine():
         }
     )
 
+    return engine
+
 try:
     ENGINE= get_sqlalchemy_engine()
     print("Connected")
@@ -40,7 +54,20 @@ except Exception as e:
 
 
 
-def auth_user(username:str, password:str, engine:Engine=ENGINE):
+def auth_user(username:str, password:str, engine:Engine=ENGINE) -> int:
+
+    """
+    Description:
+    -----
+        Validates the user and password in db and returns user_id.
+    
+    :param Engine engine: sqlalchemy engine.
+    :param str username: username.
+    :param str password: password associated to username.
+    :return int: user_id associated to username.
+    """
+
+
     if ENGINE is None:
         print("No database engine available.")
         return None
@@ -73,7 +100,20 @@ def auth_user(username:str, password:str, engine:Engine=ENGINE):
         return None
 
 
-def get_user_by_id(user_id, engine:Engine=ENGINE):
+def get_user_by_id(user_id:int, engine:Engine=ENGINE):
+
+    """
+    Description:
+    -----
+        Retrieves user_id and username associated to a user_id.
+    
+    :param Engine engine: sqlalchemy engine.
+    :param int user_id: user_id.
+    :return tuple: (user_id, username).
+    
+    """
+
+    
 
     if engine is None:
         print("No database engine available")

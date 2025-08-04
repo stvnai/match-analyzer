@@ -4,6 +4,13 @@ from wtforms.validators import InputRequired, Length
 
 class LoginForm(FlaskForm):
 
+    """
+    Description:
+    -----
+        User username and password input forms. 
+
+    """
+
     username= StringField(
         "username",
         validators= [
