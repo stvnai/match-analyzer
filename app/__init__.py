@@ -3,25 +3,37 @@ from pathlib import Path
 from flask import Flask
 from flask_login import current_user
 from flask import redirect, request, url_for
-
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
+
 from .models import User
 from .db.db_connections import get_user_by_id
 
-from dash import Dash, dcc
+from dash import Dash
 from dash_app.layout import main_container
 from dash_app.callbacks.update_data_callback import update_data_app
 from dash_app.callbacks.initial_dataload_callback import initial_load
 from dash_app.callbacks.logout_callback import log_out
 
+from dotenv import load_dotenv
+load_dotenv()
+
 
 token= os.getenv("SECRET_TOKEN")
 login_manager = LoginManager()
-
 csrf = CSRFProtect()
 
-def create_flask_app():
+
+def create_flask_app() -> Flask:
+
+    """
+    Description:
+    -----
+        Creates flask app with CSRF and Login Manager.
+
+    :return Flask: flask app.
+    
+    """
     app = Flask(__name__)
     app.secret_key = token
     login_manager.init_app(app)
@@ -31,9 +43,6 @@ def create_flask_app():
     app.register_blueprint(main)
     csrf._exempt_views.add('dash.dash.dispatch')
     
-
-
-
     @login_manager.user_loader
     def load_user(user_id):
         user_data= get_user_by_id(user_id)
@@ -53,7 +62,16 @@ def create_flask_app():
 
 #DASH APP
 
-def create_dash_app(flask_app_server):
+def create_dash_app(flask_app_server:Flask) -> Dash:
+
+    """
+    Description:
+    -----
+        Creates dash app into a flask server.
+
+    :return Dash: dash app.
+    
+    """
 
     assets_path = Path(__file__).parent.parent / "dash_app" / "assets"
 
@@ -66,10 +84,6 @@ def create_dash_app(flask_app_server):
     )
     
     dash_app.title= "Match Analyzer"
-
-
-
-
 
     dash_app.layout= main_container
 

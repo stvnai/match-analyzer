@@ -66,7 +66,7 @@ def update_data_app(app):
             Output("gain-loss-h2", "children",allow_duplicate=True),
             Output("gain-loss-h1", "style",allow_duplicate=True),
             Output("gain-loss-h1", "children",allow_duplicate=True),
-
+            Output("loading-container", "style", allow_duplicate=True),
         [
             Input("power-input", "value"),
             Input("match-length-input", "value"),
@@ -91,7 +91,10 @@ def update_data_app(app):
         power_trend_style= {"color": color}
 
         gain_loss_style= {"color":color}
+        updating_data_style = {"display":"none"}
+
+        
 
 
 
-        return matches_fig, summary_fig, match_time_value, match_count, trend_value, power_trend_style, gain_loss, gain_loss_style,percentage_value
+        return matches_fig, summary_fig, match_time_value, match_count, trend_value, power_trend_style, gain_loss, gain_loss_style,percentage_value,updating_data_style

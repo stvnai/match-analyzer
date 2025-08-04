@@ -8,24 +8,19 @@ from dash import dcc, html, Input, Output
 title_container= html.Div(
     id= "title-container",
     className= "title-container",
-    children= [
-        html.H1(
-            "Match Analyzer",
-            className= "h1-title"
-        )
-    ]
+    children= [html.H1("Match Analyzer", className= "h1-title")]
 )
 
 uploader_component= dcc.Upload(
-            id= "file-uploader",
-            className= "dash-uploader-area",
-            multiple= False,
-            accept=".FIT, .fit",
-            children= [
-                html.P("Drag and drop or"),
-                html.A("click to browse .FIT file", style= {"font-weight":"bold"})
-            ],
-            style_reject={
+    id= "file-uploader",
+    className= "dash-uploader-area",
+    multiple= False,
+    accept=".FIT, .fit",
+    children= [
+        html.P("Drag and drop or"),
+        html.A("click to browse .FIT file", style= {"font-weight":"bold"})
+    ],
+    style_reject={
         'borderStyle': 'dashed',
         'borderColor': '#1b5f8d', 
         'backgroundColor': 'rgba(27, 95, 141, 0.05)',
@@ -40,14 +35,30 @@ uploader_container= html.Div(
     children= [ uploader_component]
 )
 
+loading_data_container= html.Div(
+    className="loading-container",
+    children= dcc.Loading(
+        id="loading-data",
+        delay_hide=1000,
+        type="default",
+        children= [html.Div(
+            id="loading-container",
+            style={"display":"flex"}
+            )
+        ]
+    )
+)
+
+
 header_container= html.Div(
     id= "header-container",
     className= "header-container",
     children= [
         title_container,
-        uploader_container
-    ]
-)
+        uploader_container,
+        loading_data_container]
+    )
+
 
 #####*** METRICS CONTAINER ***#####
 
@@ -55,14 +66,8 @@ match_time_container= html.Div(
     id= "match-time-container",
     className= "match-time-container",
     children= [
-        html.H2(
-            "Match Time",
-            id= "match-time-h2",
-            className= "summ-metrics-h2"),
-        html.H1(
-            "00:00:00",
-            id= "match-time-h1",
-            className= "summ-metrics-h1")
+        html.H2("Match Time", id= "match-time-h2", className= "summ-metrics-h2"),
+        html.H1("00:00:00", id= "match-time-h1", className= "summ-metrics-h1")
     ]
 )
 
@@ -70,14 +75,8 @@ match_count_container= html.Div(
     id= "match-count-container",
     className= "match-count-container",
     children= [
-        html.H2(
-            "Match Count",
-            id= "match-count-h2",
-            className= "summ-metrics-h2"),
-        html.H1(
-            "0",
-            id= "match-count-h1",
-            className= "summ-metrics-h1")
+        html.H2("Match Count", id= "match-count-h2", className= "summ-metrics-h2"),
+        html.H1("0", id= "match-count-h1", className= "summ-metrics-h1")
     ]
 )
 
@@ -85,29 +84,18 @@ power_trend_container= html.Div(
     id= "power-trend-container",
     className= "power-trend-container",
     children= [
-        html.H2(
-            "Power Trend",
-            id= "power-trend-h2",
-            className= "summ-metrics-h2"),
-        html.H1(
-            "0",
-            id= "power-trend-h1",
-            className= "summ-metrics-h1")
+        html.H2("Power Trend", id= "power-trend-h2", className= "summ-metrics-h2"),
+        html.H1("0", id= "power-trend-h1", className= "summ-metrics-h1")
     ]
 )
+
 
 gain_loss_container= html.Div(
     id= "gain-loss-container",
     className= "gain-loss-container",
     children= [
-        html.H2(
-            "--",
-            id= "gain-loss-h2",
-            className= "summ-metrics-h2"),
-        html.H1(
-            "--",
-            id= "gain-loss-h1",
-            className= "summ-metrics-h1")
+        html.H2("--", id= "gain-loss-h2", className= "summ-metrics-h2"),
+        html.H1("--", id= "gain-loss-h1", className= "summ-metrics-h1")
     ]
 )
 
@@ -120,9 +108,9 @@ summ_metrics_container= html.Div(
         power_trend_container,
         gain_loss_container
     ],
-        style={
-            "display":"none",
-            "transition": "0.2s ease-in"
+    style={
+        "display":"none",
+        "transition": "0.2s ease-in"
     }
 )
 
@@ -134,16 +122,24 @@ power_slider= dcc.Slider(
     value=250,
     min=200,
     max=1200,
+    vertical=True,
+    verticalHeight= 200,
+    updatemode="drag",
     marks={
         200:"200W",
-        400:"400W",
-        600:"600W",
-        800:"800W",
-        1000:"1000W",
+        700:"700W",
         1200:"1200W"
     },
-    vertical=True,
-    verticalHeight= 200
+    tooltip={
+        "placement": "left",
+        "always_visible": True,
+    }
+)
+
+power_slider_container= html.Div(
+    id= "power-inner-slider-container",
+    className= "inner-slider-container",
+    children=[power_slider]
 )
 
 match_length_slider= dcc.Slider(
@@ -153,39 +149,52 @@ match_length_slider= dcc.Slider(
     min=5,
     max=600,
     step=5,
+    vertical=True,
+    verticalHeight= 200,
+    updatemode="drag",
     marks={
         10: "00:10",
-        60:"01:00",
-        180:"03:00",
         300:"05:00",
-        480:"08:00",
         600:"10:00"
     },
-    vertical=True,
-    verticalHeight= 200
+    tooltip={
+        "placement": "left",
+        "always_visible": True,
+    }
 )
 
+match_slider_container= html.Div(
+    id= "match-inner-slider-container",
+    className= "inner-slider-container",
+    children=[match_length_slider]
+)
 
 rest_slider= dcc.Slider(
     id="rest-slider",
     className="input-slider",
-    value=10,
+    value=15,
     min=5,
     max=600,
     step=5,
-        marks={
+    vertical=True,
+    verticalHeight= 200,
+    updatemode="drag",
+    marks={
         10: "00:10",
-        60:"01:00",
-        180:"03:00",
         300:"05:00",
-        480:"08:00",
         600:"10:00"
     },
-    vertical=True,
-    verticalHeight= 200
-
+    tooltip={
+        "placement": "left",
+        "always_visible": True,
+    }
 )
 
+rest_slider_container= html.Div(
+    id= "rest-inner-slider-container",
+    className= "inner-slider-container",
+    children=[rest_slider]
+)
 
 tolerance_slider= dcc.Slider(
     id="tolerance-slider",
@@ -194,17 +203,29 @@ tolerance_slider= dcc.Slider(
     min=50,
     max=100,
     step=1,
-        marks={
+    vertical=True,
+    verticalHeight= 200,
+    updatemode="drag",
+    marks={
         50: "50%",
         75:"75%",
         100:"100%"
     },
-    vertical=True,
-    verticalHeight= 200
-
+    tooltip={
+        "placement": "left",
+        "always_visible": True,
+    }
 )
 
-#####*** INPUTS ***#####
+tolerance_slider_container= html.Div(
+    id= "tolerance-inner-slider-container",
+    className= "inner-slider-container",
+    children=[tolerance_slider]
+)
+
+#####*** PARAMETER INPUTS ***#####
+
+
 
 power_input= dcc.Input(
     id="power-input",
@@ -213,8 +234,16 @@ power_input= dcc.Input(
     value=250,
     min=200,
     max=1200
-
 )
+
+power_input_container= html.Div(
+    id= "power-inner-input-container",
+    className= "inner-input-container",
+    children=[power_input]
+)
+
+
+
 match_length_input= dcc.Input(
     id="match-length-input",
     className="input-fields",
@@ -222,7 +251,12 @@ match_length_input= dcc.Input(
     value=15,
     min=5,
     max=600,
+)
 
+match_input_container= html.Div(
+    id= "match-inner-input-container",
+    className= "inner-input-container",
+    children=[match_length_input]
 )
 
 rest_input= dcc.Input(
@@ -232,8 +266,14 @@ rest_input= dcc.Input(
     value=10,
     min=5,
     max=600,
-
 )
+
+rest_input_container= html.Div(
+    id= "rest-inner-input-container",
+    className= "inner-input-container",
+    children=[rest_input]
+)
+
 tolerance_input= dcc.Input(
     id="tolerance-input",
     className="input-fields",
@@ -241,54 +281,83 @@ tolerance_input= dcc.Input(
     value=95,
     min=50,
     max=100,
-
 )
 
-h3_power= html.H3(
-    "Power",
-    id="h3-power",
-    className="h3-inputs"
-)
-h3_match_length= html.H3(
-    "Match Length",
-    id="h3-matchlength",
-    className="h3-inputs"
-)
-h3_rest= html.H3(
-    "Max Rest",
-    id="h3-rest",
-    className="h3-inputs"
-)
-h3_tolerance= html.H3(
-    "Compliance",
-    id="h3-tolerance",
-    className="h3-inputs"
+tolerance_input_container= html.Div(
+    id= "tolerance-inner-input-container",
+    className= "inner-input-container",
+    children=[tolerance_input]
 )
 
-#####*** PARAMETERS UNITS ***#####
 
-h3_power_units= html.H3(
-    "W",
-    id="h3-power-units",
-    className="h3-inputs-units"
+#####*** PARAMETER NAMES ***#####
+
+
+h3_power= html.H3("Power", id="h3-power", className="h3-inputs")
+
+power_h3_container= html.Div(
+    id= "power-h3-inner-container",
+    className="h3-inner-container",
+    children= [h3_power]
+)
+h3_match_length= html.H3("Match Length", id="h3-matchlength", className="h3-inputs")
+
+match_h3_container= html.Div(
+    id= "match-h3-inner-container",
+    className="h3-inner-container",
+    children= [h3_match_length]
 )
 
-h3_match_units= html.H3(
-    "s",
-    id="h3-match-units",
-    className="h3-inputs-units"
+h3_rest= html.H3("Max Rest", id="h3-rest", className="h3-inputs")
+
+rest_h3_container= html.Div(
+    id= "rest-h3-inner-container",
+    className="h3-inner-container",
+    children= [h3_rest]
 )
 
-h3_rest_units= html.H3(
-    "s",
-    id="h3-rest-units",
-    className="h3-inputs-units"
+h3_tolerance= html.H3("Compliance", id="h3-tolerance", className="h3-inputs")
+
+tolerance_h3_container= html.Div(
+    id= "tolerance-h3-inner-container",
+    className="h3-inner-container",
+    children= [h3_tolerance]
 )
 
-h3_tolerance_units= html.H3(
-    "%",
-    id="h3-tolerance-units",
-    className="h3-inputs-units"
+
+#####*** PARAMETER UNITS ***#####
+
+
+h3_power_units= html.H3("W", id="h3-power-units", className="h3-inputs-units")
+
+power_h3_unit_container= html.Div(
+    id= "power-h3-unit-inner-container",
+    className="h3-unit-inner-container",
+    children= [h3_power_units]
+)
+
+h3_match_units= html.H3("s", id="h3-match-units", className="h3-inputs-units")
+
+match_h3_unit_container= html.Div(
+    id= "match-h3-unit-inner-container",
+    className="h3-unit-inner-container",
+    children= [h3_match_units]
+)
+
+h3_rest_units= html.H3("s", id="h3-rest-units", className="h3-inputs-units")
+
+rest_h3_unit_container= html.Div(
+    id= "rest-h3-unit-inner-container",
+    className="h3-unit-inner-container",
+    children= [h3_rest_units]
+)
+
+h3_tolerance_units= html.H3("%", id="h3-tolerance-units", className="h3-inputs-units")
+
+tolerance_h3_unit_container= html.Div(
+    id= "tolerance-h3-unit-inner-container",
+    className="h3-unit-inner-container",
+    children= [h3_tolerance_units]
 )
 
 
@@ -298,30 +367,30 @@ power_container= html.Div(
     id="power-container",
     className="widgets-container",
     children=[
-        h3_power_units,
-        power_slider,
-        power_input,
-        h3_power
+        power_h3_unit_container,
+        power_slider_container,
+        power_input_container,
+        power_h3_container
     ]
 )
 match_length_container= html.Div(
     id="match-length-container",
     className="widgets-container",
     children=[
-        h3_match_units,
-        match_length_slider,
-        match_length_input,
-        h3_match_length
+        match_h3_unit_container,
+        match_slider_container,
+        match_input_container,
+        match_h3_container
     ]
 )
 rest_container= html.Div(
     id="rest-container",
     className="widgets-container",
     children=[
-        h3_rest_units,
-        rest_slider,
-        rest_input,
-        h3_rest
+        rest_h3_unit_container,
+        rest_slider_container,
+        rest_input_container,
+        rest_h3_container
     ]
 )
 
@@ -329,10 +398,21 @@ tolerance_container= html.Div(
     id="tolerance-container",
     className="widgets-container",
     children=[
-        h3_tolerance_units,
-        tolerance_slider,
-        tolerance_input,
-        h3_tolerance
+        tolerance_h3_unit_container,
+        tolerance_slider_container,
+        tolerance_input_container,
+        tolerance_h3_container
+    ]
+)
+
+all_inputs_container= html.Div(
+    id= "all-inputs-container",
+    className= "all-inputs-container",
+    children= [
+        power_container,
+        match_length_container,
+        rest_container,
+        tolerance_container
     ]
 )
 
@@ -341,23 +421,15 @@ tolerance_container= html.Div(
 parameters_title_container= html.Div(
     id= "parameter-title-container",
     className= "parameter-title-container",
-    children= [
-        html.H1(
-            "Parameters",
-            className= "h1-title"
-        )
-    ]
+    children= [html.H1("Parameters", className= "h1-parameter-title")]
 )
 
 parameters_container= html.Div(
-    id= "parameters-container",
-    className= "parameters-container",
+    id="parameters-container",
+    className="parameters-container",
     children=[
         parameters_title_container,
-        power_container,
-        match_length_container,
-        rest_container,
-        tolerance_container
+        all_inputs_container
     ]
 )
 
@@ -367,17 +439,13 @@ parameters_container= html.Div(
 match_chart_container= html.Div(
     id= "match-chart-container",
     className= "match-chart-container",
-    children=[
-        dcc.Graph(id="matches-chart", className="matches-chart"),
-    ]
+    children=[dcc.Graph(id="matches-chart", className="matches-chart")]
 )
 
 summary_chart_container= html.Div(
     id= "summary-chart-container",
     className= "summary-chart-container",
-    children=[
-        dcc.Graph(id="summary-chart", className="summary-chart"),
-    ]
+    children=[dcc.Graph(id="summary-chart", className="summary-chart")]
 )
 
 charts_container= html.Div(
@@ -389,13 +457,14 @@ charts_container= html.Div(
     ]
 )
 
+
+
 #####*** MAIN CONTENT AREA ***#####
 
 data_area_container= html.Div(
     id= "data-area-container",
     className= "data-area-container",
     children= [
-
         charts_container
     ]
 )
@@ -405,15 +474,15 @@ main_content_area= html.Div(
     className= "main-content-area",
     children= [
         data_area_container,
-        parameters_container
+        parameters_container,
     ],
     style={
-            "display":"none",
-            "flex-direction":"row",
-            "transition": "0.2s ease-in"
+        "display":"none",
+        "flex-direction":"row",
+        "transition": "0.2s ease-in"
     }
 )
-
+    
 
 
 logout_button= html.Button(
@@ -423,15 +492,19 @@ logout_button= html.Button(
     style={"textDecoration": "none"})  
 
 
-main_container= html.Div(id="main-container",
-                         className="main-container",
-                         children= [
-                            logout_button,
-                            dcc.Store(id="data-store"),
-                            header_container,
-                            summ_metrics_container,
-                            main_content_area
-                         ]
+data_store= dcc.Store(id="data-store")
+
+
+main_container= html.Div(
+    id="main-container",
+    className="main-container",
+    children= [
+        logout_button,
+        data_store,
+        header_container,
+        summ_metrics_container,
+        main_content_area,
+    ]
 )
 
 

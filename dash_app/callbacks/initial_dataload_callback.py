@@ -3,6 +3,7 @@ from dash_app.matchanalyzer import extract_data,  match_marker, match_chart, sum
 from dash.exceptions import PreventUpdate
 
 from dash import Input, Output, State
+import time
 
 
 def initial_load(app):
@@ -21,6 +22,8 @@ def initial_load(app):
             Output("gain-loss-h1", "children",allow_duplicate=True),
             Output("main-content-area", "style"),
             Output("summ-metrics-container", "style"),
+
+
         
             Input("file-uploader", "contents"),
             Input("file-uploader", "filename"),
@@ -64,16 +67,25 @@ def initial_load(app):
 
             gain_loss_style= {"color":color}
 
+
             return data, initial_match_chart, summary_fig, match_time_value, match_count, trend_value, power_trend_style, gain_loss, gain_loss_style, percentage_value, data_container_style, summ_metrics_container
         
         else:
             raise PreventUpdate
 
+    @app.callback(
+        Output("loading-container", "style", allow_duplicate=True),
+        Input("file-uploader", "contents"),
+        Input("file-uploader", "filename"),
+        prevent_initial_call=True
+    )
 
+    def show_loading_mesg(file_content:str, filename:str):
+        filetype= filename.endswith(".fit") or filename.endswith(".FIT")
+        if file_content and filetype:
 
+            return {"display":"flex"}
 
-
-
-
+        return {"display":"none"}
 
 
