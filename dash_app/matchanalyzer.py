@@ -306,7 +306,7 @@ def match_chart(df):
         y=power,
         mode="lines",
         name="Power",
-        line= dict(color="#1b5f8d", width=0.8)
+        line= dict(color="#1a6395", width=0.8)
         
     ))
 
@@ -355,7 +355,7 @@ def match_chart(df):
 
         yaxis= dict(
             title="<b>Power (W)</b>",
-            title_font=dict(color="#1b5f8d",size=13),
+            title_font=dict(color="#1a6395",size=13),
             title_standoff=40,
             side="left",
             range=[0,max(df["power"]) +200],
@@ -457,13 +457,13 @@ def match_summary_chart(array):
     fig=go.Figure(data=go.Bar(
         x=x,
         y=array,
-        marker_color="#1b5f8d",
+        marker_color="rgba(0, 119, 143, 0.6)",
         name="Match", 
         hovertemplate='%{y} W')
         )
-    if len(array) > 1:  # Evita error si solo hay un punto
-        coef = np.polyfit(x, array, 1)  # Ajuste lineal (grado 1)
-        trend_line = np.polyval(coef, x).astype(float)  # Evalúa la recta
+    if len(array) > 1:
+        coef = np.polyfit(x, array, 1)
+        trend_line = np.polyval(coef, x).astype(float)
 
         color= "rgb(161, 168, 180)"
         if trend_line[0] > trend_line[-1]:
@@ -500,40 +500,41 @@ def match_summary_chart(array):
         tick_list= x_labels
 
     fig.update_layout(
-        template='plotly_dark',
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        title="<b>Matches Summary</b>",
-        font=dict(color="rgb(161, 168, 180)"),
-        xaxis_title="<b>Matches</b>",
-        yaxis_title="Avg Power (W)",
-        xaxis=dict(
-            title_font=dict(color="rgb(161, 168, 180)",size=13),
-            tickmode="array",
-            tickvals=list(x),  
-            ticktext=tick_list,
-            tickangle=-30,
-            tickfont=dict(color="rgb(161, 168, 180)",size=11)
+    template='plotly_dark',
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    title="<b>Matches Summary</b>",
+    font=dict(color="rgb(161, 168, 180)"),
+    xaxis_title="<b>Matches</b>",
+    yaxis_title="Avg Power (W)",
+    margin=dict(l=125, r=125, t=30, b=10),
+    
+    xaxis=dict(
+        title_font=dict(color="rgb(161, 168, 180)",size=13),
+        tickmode="array",
+        tickvals=list(x),  
+        ticktext=tick_list,
+        tickangle=-30,
+        tickfont=dict(color="rgb(161, 168, 180)",size=11)
         
         
     ),
-    margin=dict(l=125, r=125, t=30, b=10),
     yaxis= dict(
-            title="<b>Power (W)</b>",
-            title_font=dict(color="rgba(27, 95, 141,1.0)",size=13),
-            tickfont=dict(color="rgb(161, 168, 180)"),
-            showgrid=False
-            ),
+        title="<b>Power (W)</b>",
+        title_font=dict(color="rgba(0, 119, 143, 1)",size=13),
+        tickfont=dict(color="rgba(0, 119, 143, 1)"),
+        showgrid=False
+    ),
+
     hovermode="x unified",
 
     hoverlabel=dict(
-    bgcolor="rgba(45, 45, 45, 0.85)",
-    font_color="rgb(161, 168, 180)",
-    bordercolor="rgba(70, 70, 70, 0.6)"
+        bgcolor="rgba(45, 45, 45, 0.85)",
+        font_color="rgb(161, 168, 180)",
+        bordercolor="rgba(70, 70, 70, 0.6)"
     )
              
     )
-
 
     fig.update_xaxes(
         # tickmode="auto",
