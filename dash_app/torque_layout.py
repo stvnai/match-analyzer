@@ -6,13 +6,13 @@ from dash import dcc, html, Input, Output
 #####*** HEADER CONTAINER ***#####
  
 title_container= html.Div(
-    id= "title-container",
+    id= "torque-title-container",
     className= "title-container",
-    children= [html.H1("Match Analyzer", className= "h1-title")]
+    children= [html.H1("Torque Analyzer", className= "h1-title")]
 )
 
 uploader_component= dcc.Upload(
-    id= "file-uploader",
+    id= "torque-file-uploader",
     className= "dash-uploader-area",
     multiple= False,
     accept=".FIT, .fit",
@@ -30,7 +30,7 @@ uploader_component= dcc.Upload(
 )
 
 uploader_container= html.Div(
-    id= "uploader-container",
+    id= "torque-uploader-container",
     className= "uploader-container",
     children= [ uploader_component]
 )
@@ -38,11 +38,11 @@ uploader_container= html.Div(
 loading_data_container= html.Div(
     className="loading-container",
     children= dcc.Loading(
-        id="loading-data",
+        id="torque-loading-data",
         delay_hide=1000,
         type="default",
         children= [html.Div(
-            id="loading-container",
+            id="torque-loading-container",
             style={"display":"flex"}
             )
         ]
@@ -51,7 +51,7 @@ loading_data_container= html.Div(
 
 
 header_container= html.Div(
-    id= "header-container",
+    id= "torque-header-container",
     className= "header-container",
     children= [
         title_container,
@@ -63,44 +63,44 @@ header_container= html.Div(
 #####*** METRICS CONTAINER ***#####
 
 match_time_container= html.Div(
-    id= "match-time-container",
+    id= "torque-match-time-container",
     className= "match-time-container",
     children= [
-        html.H2("Match Time", id= "match-time-h2", className= "summ-metrics-h2"),
-        html.H1("00:00:00", id= "match-time-h1", className= "summ-metrics-h1")
+        html.H2("Torque Time", id= "torque-match-time-h2", className= "summ-metrics-h2"),
+        html.H1("00:00:00", id= "torque-match-time-h1", className= "summ-metrics-h1")
     ]
 )
 
 match_count_container= html.Div(
-    id= "match-count-container",
+    id= "torque-match-count-container",
     className= "match-count-container",
     children= [
-        html.H2("Match Count", id= "match-count-h2", className= "summ-metrics-h2"),
-        html.H1("0", id= "match-count-h1", className= "summ-metrics-h1")
+        html.H2("Torque Count", id= "torque-match-count-h2", className= "summ-metrics-h2"),
+        html.H1("0", id= "torque-match-count-h1", className= "summ-metrics-h1")
     ]
 )
 
 power_trend_container= html.Div(
-    id= "power-trend-container",
+    id= "torque-power-trend-container",
     className= "power-trend-container",
     children= [
-        html.H2("Power Trend", id= "power-trend-h2", className= "summ-metrics-h2"),
-        html.H1("0", id= "power-trend-h1", className= "summ-metrics-h1")
+        html.H2("Torque Trend", id= "torque-power-trend-h2", className= "summ-metrics-h2"),
+        html.H1("0", id= "torque-power-trend-h1", className= "summ-metrics-h1")
     ]
 )
 
 
 gain_loss_container= html.Div(
-    id= "gain-loss-container",
+    id= "torque-gain-loss-container",
     className= "gain-loss-container",
     children= [
-        html.H2("--", id= "gain-loss-h2", className= "summ-metrics-h2"),
-        html.H1("--", id= "gain-loss-h1", className= "summ-metrics-h1")
+        html.H2("--", id= "torque-gain-loss-h2", className= "summ-metrics-h2"),
+        html.H1("--", id= "torque-gain-loss-h1", className= "summ-metrics-h1")
     ]
 )
 
 summ_metrics_container= html.Div(
-    id= "summ-metrics-container",
+    id= "torque-summ-metrics-container",
     className= "summ-metrics-container",
     children=[
         match_time_container,
@@ -117,18 +117,18 @@ summ_metrics_container= html.Div(
 #####*** SLIDERS ***#####
 
 power_slider= dcc.Slider(
-    id="power-slider",
+    id="torque-power-slider",
     className="input-slider",
-    value=250,
-    min=200,
-    max=1200,
+    value=0.65,
+    min=0.5,
+    max=2.5,
     vertical=True,
     verticalHeight= 200,
     updatemode="drag",
     marks={
-        200:"200W",
-        700:"700W",
-        1200:"1200W"
+        0.5:"0.5",
+        1.5:"1.5",
+        2.5:"2.5"
     },
     tooltip={
         "placement": "left",
@@ -137,25 +137,25 @@ power_slider= dcc.Slider(
 )
 
 power_slider_container= html.Div(
-    id= "power-inner-slider-container",
+    id= "torque-power-inner-slider-container",
     className= "inner-slider-container",
     children=[power_slider]
 )
 
 match_length_slider= dcc.Slider(
-    id="match-length-slider",
+    id="torque-match-length-slider",
     className="input-slider",
     value=15,
     min=5,
-    max=600,
+    max=1200,
     step=5,
     vertical=True,
     verticalHeight= 200,
     updatemode="drag",
     marks={
         10: "00:10",
-        300:"05:00",
-        600:"10:00"
+        600:"10:00",
+        1200:"20:00"
     },
     tooltip={
         "placement": "left",
@@ -164,13 +164,13 @@ match_length_slider= dcc.Slider(
 )
 
 match_slider_container= html.Div(
-    id= "match-inner-slider-container",
+    id= "torque-match-inner-slider-container",
     className= "inner-slider-container",
     children=[match_length_slider]
 )
 
 rest_slider= dcc.Slider(
-    id="rest-slider",
+    id="torque-rest-slider",
     className="input-slider",
     value=15,
     min=5,
@@ -191,13 +191,13 @@ rest_slider= dcc.Slider(
 )
 
 rest_slider_container= html.Div(
-    id= "rest-inner-slider-container",
+    id= "torque-rest-inner-slider-container",
     className= "inner-slider-container",
     children=[rest_slider]
 )
 
 tolerance_slider= dcc.Slider(
-    id="tolerance-slider",
+    id="torque-tolerance-slider",
     className="input-slider",
     value=95,
     min=50,
@@ -218,7 +218,7 @@ tolerance_slider= dcc.Slider(
 )
 
 tolerance_slider_container= html.Div(
-    id= "tolerance-inner-slider-container",
+    id= "torque-tolerance-inner-slider-container",
     className= "inner-slider-container",
     children=[tolerance_slider]
 )
@@ -228,16 +228,16 @@ tolerance_slider_container= html.Div(
 
 
 power_input= dcc.Input(
-    id="power-input",
+    id="torque-power-input",
     className="input-fields",
     type="number",
-    value=250,
-    min=200,
-    max=1200
+    value=0.65,
+    min=0.5,
+    max=2.5
 )
 
 power_input_container= html.Div(
-    id= "power-inner-input-container",
+    id= "torque-power-inner-input-container",
     className= "inner-input-container",
     children=[power_input]
 )
@@ -245,22 +245,22 @@ power_input_container= html.Div(
 
 
 match_length_input= dcc.Input(
-    id="match-length-input",
+    id="torque-match-length-input",
     className="input-fields",
     type="number",
     value=15,
     min=5,
-    max=600,
+    max=1200,
 )
 
 match_input_container= html.Div(
-    id= "match-inner-input-container",
+    id= "torque-match-inner-input-container",
     className= "inner-input-container",
     children=[match_length_input]
 )
 
 rest_input= dcc.Input(
-    id="rest-input",
+    id="torque-rest-input",
     className="input-fields",
     type="number",
     value=10,
@@ -269,13 +269,13 @@ rest_input= dcc.Input(
 )
 
 rest_input_container= html.Div(
-    id= "rest-inner-input-container",
+    id= "torque-rest-inner-input-container",
     className= "inner-input-container",
     children=[rest_input]
 )
 
 tolerance_input= dcc.Input(
-    id="tolerance-input",
+    id="torque-tolerance-input",
     className="input-fields",
     type="number",
     value=95,
@@ -284,7 +284,7 @@ tolerance_input= dcc.Input(
 )
 
 tolerance_input_container= html.Div(
-    id= "tolerance-inner-input-container",
+    id= "torque-tolerance-inner-input-container",
     className= "inner-input-container",
     children=[tolerance_input]
 )
@@ -293,33 +293,33 @@ tolerance_input_container= html.Div(
 #####*** PARAMETER NAMES ***#####
 
 
-h3_power= html.H3("Power", id="h3-power", className="h3-inputs")
+h3_power= html.H3("Torque", id="torque-h3-power", className="h3-inputs")
 
 power_h3_container= html.Div(
-    id= "power-h3-inner-container",
+    id= "torque-power-h3-inner-container",
     className="h3-inner-container",
     children= [h3_power]
 )
-h3_match_length= html.H3("Match Length", id="h3-matchlength", className="h3-inputs")
+h3_match_length= html.H3("Match Length", id="torque-h3-matchlength", className="h3-inputs")
 
 match_h3_container= html.Div(
-    id= "match-h3-inner-container",
+    id= "torque-match-h3-inner-container",
     className="h3-inner-container",
     children= [h3_match_length]
 )
 
-h3_rest= html.H3("Max Rest", id="h3-rest", className="h3-inputs")
+h3_rest= html.H3("Max Rest", id="torque-h3-rest", className="h3-inputs")
 
 rest_h3_container= html.Div(
-    id= "rest-h3-inner-container",
+    id= "torque-rest-h3-inner-container",
     className="h3-inner-container",
     children= [h3_rest]
 )
 
-h3_tolerance= html.H3("Compliance", id="h3-tolerance", className="h3-inputs")
+h3_tolerance= html.H3("Compliance", id="torque-h3-tolerance", className="h3-inputs")
 
 tolerance_h3_container= html.Div(
-    id= "tolerance-h3-inner-container",
+    id= "torque-tolerance-h3-inner-container",
     className="h3-inner-container",
     children= [h3_tolerance]
 )
@@ -328,34 +328,34 @@ tolerance_h3_container= html.Div(
 #####*** PARAMETER UNITS ***#####
 
 
-h3_power_units= html.H3("W", id="h3-power-units", className="h3-inputs-units")
+h3_power_units= html.H3("Nm/kg", id="torque-h3-power-units", className="h3-inputs-units")
 
 power_h3_unit_container= html.Div(
-    id= "power-h3-unit-inner-container",
+    id= "torque-power-h3-unit-inner-container",
     className="h3-unit-inner-container",
     children= [h3_power_units]
 )
 
-h3_match_units= html.H3("s", id="h3-match-units", className="h3-inputs-units")
+h3_match_units= html.H3("s", id="torque-h3-match-units", className="h3-inputs-units")
 
 match_h3_unit_container= html.Div(
-    id= "match-h3-unit-inner-container",
+    id= "torque-match-h3-unit-inner-container",
     className="h3-unit-inner-container",
     children= [h3_match_units]
 )
 
-h3_rest_units= html.H3("s", id="h3-rest-units", className="h3-inputs-units")
+h3_rest_units= html.H3("s", id="torque-h3-rest-units", className="h3-inputs-units")
 
 rest_h3_unit_container= html.Div(
-    id= "rest-h3-unit-inner-container",
+    id= "torque-rest-h3-unit-inner-container",
     className="h3-unit-inner-container",
     children= [h3_rest_units]
 )
 
-h3_tolerance_units= html.H3("%", id="h3-tolerance-units", className="h3-inputs-units")
+h3_tolerance_units= html.H3("%", id="torque-h3-tolerance-units", className="h3-inputs-units")
 
 tolerance_h3_unit_container= html.Div(
-    id= "tolerance-h3-unit-inner-container",
+    id= "torque-tolerance-h3-unit-inner-container",
     className="h3-unit-inner-container",
     children= [h3_tolerance_units]
 )
@@ -364,7 +364,7 @@ tolerance_h3_unit_container= html.Div(
 #####*** WIDGETS CONTAINERS ***#####
 
 power_container= html.Div(
-    id="power-container",
+    id="torque-power-container",
     className="widgets-container",
     children=[
         power_h3_unit_container,
@@ -374,7 +374,7 @@ power_container= html.Div(
     ]
 )
 match_length_container= html.Div(
-    id="match-length-container",
+    id="torque-match-length-container",
     className="widgets-container",
     children=[
         match_h3_unit_container,
@@ -384,7 +384,7 @@ match_length_container= html.Div(
     ]
 )
 rest_container= html.Div(
-    id="rest-container",
+    id="torque-rest-container",
     className="widgets-container",
     children=[
         rest_h3_unit_container,
@@ -395,7 +395,7 @@ rest_container= html.Div(
 )
 
 tolerance_container= html.Div(
-    id="tolerance-container",
+    id="torque-tolerance-container",
     className="widgets-container",
     children=[
         tolerance_h3_unit_container,
@@ -406,7 +406,7 @@ tolerance_container= html.Div(
 )
 
 all_inputs_container= html.Div(
-    id= "all-inputs-container",
+    id= "torque-all-inputs-container",
     className= "all-inputs-container",
     children= [
         power_container,
@@ -419,13 +419,13 @@ all_inputs_container= html.Div(
 #####*** PARAMETERS CONTAINER ***#####
 
 parameters_title_container= html.Div(
-    id= "parameter-title-container",
+    id= "torque-parameter-title-container",
     className= "parameter-title-container",
     children= [html.H1("Parameters", className= "h1-parameter-title")]
 )
 
 parameters_container= html.Div(
-    id="parameters-container",
+    id="torque-parameters-container",
     className="parameters-container",
     children=[
         parameters_title_container,
@@ -437,19 +437,19 @@ parameters_container= html.Div(
 #####*** CHARTS CONTAINER ***#####
 
 match_chart_container= html.Div(
-    id= "match-chart-container",
+    id= "torque-match-chart-container",
     className= "match-chart-container",
-    children=[dcc.Graph(id="matches-chart", className="matches-chart")]
+    children=[dcc.Graph(id="torque-matches-chart", className="matches-chart")]
 )
 
 summary_chart_container= html.Div(
-    id= "summary-chart-container",
+    id= "torque-summary-chart-container",
     className= "summary-chart-container",
-    children=[dcc.Graph(id="summary-chart", className="summary-chart")]
+    children=[dcc.Graph(id="torque-summary-chart", className="summary-chart")]
 )
 
 charts_container= html.Div(
-    id="charts-container",
+    id="torque-charts-container",
     className="charts-container",
     children=[
         match_chart_container,
@@ -462,7 +462,7 @@ charts_container= html.Div(
 #####*** MAIN CONTENT AREA ***#####
 
 data_area_container= html.Div(
-    id= "data-area-container",
+    id= "torque-data-area-container",
     className= "data-area-container",
     children= [
         charts_container
@@ -470,7 +470,7 @@ data_area_container= html.Div(
 )
 
 main_content_area= html.Div(
-    id= "main-content-area",
+    id= "torque-main-content-area",
     className= "main-content-area",
     children= [
         data_area_container,
@@ -487,18 +487,27 @@ main_content_area= html.Div(
 
 logout_button= html.Button(
     "Log Out",
-    id="logout-button",
+    id="torque-logout-button",
     className="logout-button",
     style={"textDecoration": "none"})  
 
 
-data_store= dcc.Store(id="data-store")
+data_store= dcc.Store(id="torque-data-store")
+
+return_button = html.A(
+    "← Return",
+    href="/dash/",  # o la ruta que necesites
+    id="torque-return-button",
+    className="return-button",
+    style={"textDecoration": "none"}
+)
 
 
-main_container= html.Div(
-    id="main-container",
+torque_main_container= html.Div(
+    id="torque-main-container",
     className="main-container",
     children= [
+        return_button,
         logout_button,
         data_store,
         header_container,
