@@ -1,6 +1,7 @@
 
-from dash import Input, Output, State, callback
+from dash import Input, Output, State, callback, no_update
 from dash_app.matchanalyzer import match_marker, compute_avg_matches, match_chart, match_summary_chart, match_time, summ_metric_values
+from dash_app.torqueanalyzer import torque_marker, torque_chart, torque_summ_metric_values, torque_time, compute_avg_torque, torque_summary_chart
 
 def update_data_app(app):
     
@@ -68,21 +69,25 @@ def update_data_app(app):
             Output("gain-loss-h1", "children",allow_duplicate=True),
             Output("loading-container", "style", allow_duplicate=True),
         [
-            Input("power-input", "value"),
-            Input("match-length-input", "value"),
-            Input("rest-input", "value"),
-            Input("tolerance-input", "value")
+            Input("power-slider", "value"),
+            Input("match-length-slider", "value"),
+            Input("rest-slider", "value"),
+            Input("tolerance-slider", "value")
         ],
     
             State("data-store", "data"),
+            State("date-store", "data"),
             prevent_initial_call=True
     )
 
-    def update_charts_data(power, match_length, rest, tolerance, data):
+    def update_charts_data(power, match_length, rest, tolerance, data, date):
+
+        if power is None or match_length is None or rest is None or tolerance is None:
+            return no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update
 
         df= match_marker(data, power, match_length, rest, tolerance)
         matches_summary= compute_avg_matches(df)
-        matches_fig= match_chart(df)
+        matches_fig= match_chart(df, date)
         summary_fig, trend=match_summary_chart(matches_summary)
         match_time_value= match_time(df)
         match_count= len(matches_summary)
@@ -93,8 +98,105 @@ def update_data_app(app):
         gain_loss_style= {"color":color}
         updating_data_style = {"display":"none"}
 
-        
-
-
 
         return matches_fig, summary_fig, match_time_value, match_count, trend_value, power_trend_style, gain_loss, gain_loss_style,percentage_value,updating_data_style
+    
+##### TORQUE CALLBACKS
+
+def torque_update_data_app(app):
+    
+    # Un solo callback para todos los pares
+    @app.callback(
+        [
+            Output("torque-power-slider", "value"), Output("torque-power-input", "value"),
+            Output("torque-match-length-slider", "value"), Output("torque-match-length-input", "value"),
+            Output("torque-rest-slider", "value"), Output("torque-rest-input", "value"),
+            Output("torque-tolerance-slider", "value"), Output("torque-tolerance-input", "value")
+        ],
+        
+        [
+            Input("torque-power-slider", "value"), Input("torque-power-input", "value"),
+            Input("torque-match-length-slider", "value"), Input("torque-match-length-input", "value"),
+            Input("torque-rest-slider", "value"), Input("torque-rest-input", "value"),
+            Input("torque-tolerance-slider", "value"), Input("torque-tolerance-input", "value")
+        ],
+        
+        prevent_initial_call=True
+    )
+    def torque_sync_all_pairs(*values):
+        from dash import ctx
+        
+        # Mapeo de inputs a sus pares
+        pairs = {
+            "torque-power-slider": ("torque-power-slider", "torque-power-input"),
+            "torque-power-input": ("torque-power-slider", "torque-power-input"),
+            "torque-match-length-slider": ("torque-match-length-slider", "torque-match-length-input"),
+            "torque-match-length-input": ("torque-match-length-slider", "torque-match-length-input"),
+            "torque-rest-slider": ("torque-rest-slider", "torque-rest-input"),
+            "torque-rest-input": ("torque-rest-slider", "torque-rest-input"),
+            "torque-tolerance-slider": ("torque-tolerance-slider", "torque-tolerance-input"),
+            "torque-tolerance-input": ("torque-tolerance-slider", "torque-tolerance-input")
+        }
+        
+        triggered = ctx.triggered_id
+        if triggered in pairs:
+            # Encontrar el valor que cambió
+            input_index = list(pairs.keys()).index(triggered)
+            new_value = values[input_index]
+            
+            # Actualizar ambos valores del par
+            result = list(values)
+            pair_ids = pairs[triggered]
+            slider_index = list(pairs.keys()).index(pair_ids[0])
+            input_index = list(pairs.keys()).index(pair_ids[1])
+            
+            result[slider_index] = new_value
+            result[input_index] = new_value
+            
+            return result
+        
+        return values
+    
+    @app.callback(
+            Output("torque-matches-chart", "figure",allow_duplicate=True),
+            Output("torque-summary-chart", "figure",allow_duplicate=True),
+            Output("torque-match-time-h1", "children",allow_duplicate=True),
+            Output("torque-match-count-h1", "children",allow_duplicate=True),
+            Output("torque-power-trend-h1", "children",allow_duplicate=True),
+            Output("torque-power-trend-h1", "style",allow_duplicate=True),
+            Output("torque-gain-loss-h2", "children",allow_duplicate=True),
+            Output("torque-gain-loss-h1", "style",allow_duplicate=True),
+            Output("torque-gain-loss-h1", "children",allow_duplicate=True),
+            Output("torque-loading-container", "style", allow_duplicate=True),
+        [
+            Input("torque-power-slider", "value"),
+            Input("torque-match-length-slider", "value"),
+            Input("torque-rest-slider", "value"),
+            Input("torque-tolerance-slider", "value")
+        ],
+    
+            State("torque-data-store", "data"),
+            State("torque-date-store", "data"),
+            prevent_initial_call=True
+    )
+
+    def torque_update_charts_data(newton_kg, match_length, rest, tolerance, data, date):
+
+        if newton_kg is None or match_length is None or rest is None or tolerance is None:
+            return no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update
+
+        df= torque_marker(data, newton_kg, match_length, rest, tolerance)
+        matches_summary= compute_avg_torque(df)
+        matches_fig= torque_chart(df, date)
+        summary_fig, trend=torque_summary_chart(matches_summary)
+        match_time_value= torque_time(df)
+        match_count= len(matches_summary)
+        color, trend_value, gain_loss, percentage_value= torque_summ_metric_values(trend)
+
+        power_trend_style= {"color": color}
+
+        gain_loss_style= {"color":color}
+        updating_data_style = {"display":"none"}
+
+        
+        return matches_fig, summary_fig, match_time_value, match_count, trend_value, power_trend_style, gain_loss, gain_loss_style, percentage_value, updating_data_style

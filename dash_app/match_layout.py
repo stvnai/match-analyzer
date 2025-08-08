@@ -99,6 +99,22 @@ gain_loss_container= html.Div(
     ]
 )
 
+enter_weight_container= html.Div(
+    id= "match-enter-weight-container",
+    className= "weight-container",
+    children= [
+        html.H2("Enter weight (kg):", id= "match-enter-weight-h2", className= "enter-weight-h2"),
+        dcc.Input(
+            id="match-weight-input",
+        className="input-weight",
+        type="number",
+        value=60,
+        min=50,
+        max=120
+        )
+    ]
+)
+
 summ_metrics_container= html.Div(
     id= "summ-metrics-container",
     className= "summ-metrics-container",
@@ -106,7 +122,8 @@ summ_metrics_container= html.Div(
         match_time_container,
         match_count_container,
         power_trend_container,
-        gain_loss_container
+        gain_loss_container,
+        enter_weight_container
     ],
     style={
         "display":"none",
@@ -124,11 +141,10 @@ power_slider= dcc.Slider(
     max=1200,
     vertical=True,
     verticalHeight= 200,
-    updatemode="drag",
     marks={
-        200:"200W",
-        700:"700W",
-        1200:"1200W"
+        200:"200",
+        700:"700",
+        1200:"1200"
     },
     tooltip={
         "placement": "left",
@@ -151,7 +167,6 @@ match_length_slider= dcc.Slider(
     step=5,
     vertical=True,
     verticalHeight= 200,
-    updatemode="drag",
     marks={
         10: "00:10",
         300:"05:00",
@@ -178,7 +193,6 @@ rest_slider= dcc.Slider(
     step=5,
     vertical=True,
     verticalHeight= 200,
-    updatemode="drag",
     marks={
         10: "00:10",
         300:"05:00",
@@ -205,11 +219,10 @@ tolerance_slider= dcc.Slider(
     step=1,
     vertical=True,
     verticalHeight= 200,
-    updatemode="drag",
     marks={
-        50: "50%",
-        75:"75%",
-        100:"100%"
+        50: "50",
+        75:"75",
+        100:"100"
     },
     tooltip={
         "placement": "left",
@@ -439,14 +452,52 @@ parameters_container= html.Div(
 match_chart_container= html.Div(
     id= "match-chart-container",
     className= "match-chart-container",
-    children=[dcc.Graph(id="matches-chart", className="matches-chart")]
+    children=[
+        dcc.Graph(
+            id="matches-chart", 
+            className="matches-chart",
+            config={
+                "modeBarButtonsToRemove": [
+                    'pan2d',
+                    'select2d',
+                    'lasso2d',
+                    
+                    'zoomOut2d',
+                    "autoscale",
+                    'zoomIn2d',
+                    'zoom2d'
+                ],
+                "displaylogo": False
+            }
+        )
+    ]
 )
+
 
 summary_chart_container= html.Div(
     id= "summary-chart-container",
     className= "summary-chart-container",
-    children=[dcc.Graph(id="summary-chart", className="summary-chart")]
+    children=[
+        dcc.Graph(
+            id="summary-chart", 
+            className="summary-chart",
+            config={
+                "modeBarButtonsToRemove": [
+                    'pan2d',
+                    'select2d',
+                    'lasso2d',
+                    
+                    'zoomOut2d',
+                    "autoscale",
+                    'zoomIn2d',
+                    'zoom2d'
+                ],
+                "displaylogo": False
+            }
+        )
+    ]
 )
+
 
 charts_container= html.Div(
     id="charts-container",
@@ -491,16 +542,27 @@ logout_button= html.Button(
     className="logout-button",
     style={"textDecoration": "none"})  
 
+return_button = html.A(
+    "← Return",
+    href="/dash/",  # o la ruta que necesites
+    id="match-return-button",
+    className="return-button",
+    style={"textDecoration": "none"}
+)
+
 
 data_store= dcc.Store(id="data-store")
+date_store= dcc.Store(id="date-store")
 
 
-main_container= html.Div(
+match_main_container= html.Div(
     id="main-container",
     className="main-container",
     children= [
+        return_button,
         logout_button,
         data_store,
+        date_store,
         header_container,
         summ_metrics_container,
         main_content_area,
