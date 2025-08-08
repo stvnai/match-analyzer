@@ -5,7 +5,6 @@ from sqlalchemy import Engine
 from werkzeug.security import check_password_hash
 
 
-
 def get_sqlalchemy_engine() -> Engine:
 
     """
