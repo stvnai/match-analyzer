@@ -3,12 +3,12 @@ import numpy as np
 import plotly.graph_objects as go
 from garmin_fit_sdk import Stream, Decoder
 import os
-import tempfile
+from datetime import datetime
 import base64
 import io
 
 
-def extract_data(file):
+def extract_data(file, weight=60):
     '''
     Extract metrics used for another feature engineer process.
 
@@ -56,13 +56,17 @@ def extract_data(file):
 
         return raw_data_df
     
-    weight=60
+    date=datetime.now()
+
+    if "session_mesgs" in messages:
+        date= messages.get("session_mesgs")[0]["timestamp"]
+
+    
     if "user_profile_mesgs" in messages_keys:
         try:
             weight = messages.get('user_profile_mesgs',[{}])[0].get('weight',60)
         except Exception as e:
             print(f"Error in extract_data function {e}: Weight set to 60kg")
-            weight=60
 
     if "record_mesgs" in messages_keys:
 
@@ -162,44 +166,27 @@ def extract_data(file):
 
 ## WEIGHT RELATED METRICS
 
-    if weight:
 
-        try:    
-            if "accumulated_power" in raw_data_cols:
-                data_df["kj_kg"]= (raw_data_df["accumulated_power"] / 1000 / weight).round(2).astype("Float64")
-        except (ValueError, TypeError) as e:
-            print(f"Error converting kj_kg data from {filename}: {e}.")
+    try:    
+        if "accumulated_power" in raw_data_cols:
+            data_df["kj_kg"]= (raw_data_df["accumulated_power"] / 1000 / weight).round(2).astype("Float64")
+    except (ValueError, TypeError) as e:
+        print(f"Error converting kj_kg data from {filename}: {e}.")
 
-        try:
-            if "power" in raw_data_cols:
-                data_df["w_kg"]= (raw_data_df["power"] / weight).round(2).astype("Float64")
-        except (ValueError, TypeError) as e:
-            print(f"Error converting w_kg data {filename}: {e}.")
-        
-    else:
-        print(f"No data found for kj/kg and w/kg in {filename}.")
+    try:
+        if "power" in raw_data_cols:
+            data_df["w_kg"]= (raw_data_df["power"] / weight).round(2).astype("Float64")
+    except (ValueError, TypeError) as e:
+        print(f"Error converting w_kg data {filename}: {e}.")
+
 
 
 
     df_processed= data_df.to_dict("records")
 
 
-    return df_processed
+    return df_processed, date
 
-# def load_and_process_file(uploaded_file):
-#     try:
-#         with tempfile.NamedTemporaryFile(delete=False, suffix= ".fit") as temp_file:
-#             temp_file.write(uploaded_file.getbuffer())
-#             temp_filepath= temp_file.name
-
-        
-#         data, date= extract_data(temp_filepath)
-    
-#         return data, date
-#     except Exception as e:
-#             print("An error processing file has ocurred")
-#     finally:
-#             os.remove(temp_filepath)
 
 def match_marker(data ,match_power= 200, match_length= 15, rest= 10, tolerance= 90) -> pd.DataFrame:
     
@@ -246,27 +233,33 @@ def match_marker(data ,match_power= 200, match_length= 15, rest= 10, tolerance= 
         else:
             in_match = False
     
-    df["power"] = df["power"].astype(float)
+
     df.drop(columns="trigger", inplace=True)
 
     return df.copy()
 
 def compute_avg_matches(df: pd.DataFrame):
-    """Calcula los promedios de los bloques de valores en la columna 'matches'."""
+    """Calcula los promedios de los bloques de valores en la columna 'torque'."""
     avg_matches = []
     current_block = []
 
-    for value in df["matches"]:
-        if value != 0:
-            current_block.append(value)
-        elif current_block:
-            avg_matches.append(sum(current_block) / len(current_block))
-            current_block = []
 
-    if current_block:  # Captura el último bloque si el DF termina sin ceros
+    for i, row in df.iterrows():
+        if row["match_count"] == 1:
+            
+
+            current_block.append(row["matches"])
+        elif row["match_count"] == 0:
+            
+            if current_block:
+                avg_matches.append(sum(current_block) / len(current_block))
+                current_block = []
+
+    # Capturar último bloque si existe
+    if current_block:
         avg_matches.append(sum(current_block) / len(current_block))
     
-    avg_matches= np.array(avg_matches).astype(int)
+    avg_matches= np.array(avg_matches, dtype=np.float64)
     return avg_matches
 
 
@@ -277,7 +270,7 @@ def process_matches(data, match_power, match_lenght, rest, tolerance):
 
  # CHARTS
 
-def match_chart(df):
+def match_chart(df, date):
     
     x=df["elapsed_time"]
     elevation=df["elevation"]
@@ -337,7 +330,7 @@ def match_chart(df):
         template='plotly_dark',
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        title="<b>Matches in Activity</b>",
+        title=f"<b>Matches in Activity</b> {date}",
         font=dict(color="rgb(161, 168, 180)"),
         xaxis=dict(
             fixedrange=False,
@@ -519,11 +512,14 @@ def match_summary_chart(array):
         
         
     ),
+    dragmode="zoom",
+
     yaxis= dict(
         title="<b>Power (W)</b>",
         title_font=dict(color="rgba(0, 119, 143, 1)",size=13),
         tickfont=dict(color="rgba(0, 119, 143, 1)"),
-        showgrid=False
+        showgrid=False,
+        fixedrange=True  
     ),
 
     hovermode="x unified",

@@ -373,7 +373,8 @@ div[data-dash-is-loading="true"]::before {
 .match-time-container,
 .match-count-container,
 .power-trend-container,
-.gain-loss-container {
+.gain-loss-container,
+.weight-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -387,12 +388,36 @@ div[data-dash-is-loading="true"]::before {
     box-sizing: border-box;
 }
 
+
 .summ-metrics-h2 {
     font-family: "DM Sans", "Noto Sans", sans-serif;
     font-size: clamp(1.25rem, 1.25vw, 1.5rem);
     color: #1b5f8d;
     margin-bottom: -0.45rem;
     text-align: center;
+}
+.enter-weight-h2 {
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    font-size: clamp(1.25rem, 1.25vw, 1.5rem);
+    color: #1b5f8d;
+    margin-top: -0.3rem;
+    text-align: center;
+}
+
+.input-weight {
+    width: 3rem;
+    height: 2rem;
+    background-color: transparent;
+    border: 2px solid #1b5f8d;
+    border-radius: 0.5rem;
+    text-align: center;
+    color: #a4a8bb;
+    font-family: "DM Sans", "Noto Sans", sans-serif;
+    font-size: 1.25rem;
+    font-weight: bold;
+    outline: none;
+    box-shadow: none;
+    margin-top: -1rem;
 }
 
 .summ-metrics-h1 {
@@ -437,6 +462,11 @@ div[data-dash-is-loading="true"]::before {
 }
 .summary-chart-container {
     height: 40%;
+}
+
+.js-plotly-plot .plotly .modebar {
+    left: 88.5%;
+    transform: translateX(-50%);
 }
 
 

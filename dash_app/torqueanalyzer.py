@@ -5,9 +5,10 @@ from garmin_fit_sdk import Stream, Decoder
 import os
 import base64
 import io
+from datetime import datetime
 
 
-def extract_data(file):
+def torque_extract_data(file, weight=60):
     '''
     Extract metrics used for another feature engineer process.
 
@@ -26,6 +27,7 @@ def extract_data(file):
         'speed': 'Float64',
         'power': 'Int64',
         'nm': 'Float64',
+        'nm_kg': 'Float64',
         "cadence": 'Int64',
         'heart_rate': 'Int64',
         'accumulated_power': 'Int64',
@@ -35,6 +37,8 @@ def extract_data(file):
     }
 
     filename= os.path.basename(file)
+    
+
 
     data_cols= list(data_schema.keys())
     data_df= pd.DataFrame(columns=list(data_schema.keys())).astype(data_schema)
@@ -57,7 +61,10 @@ def extract_data(file):
 
         return raw_data_df
     
-    weight=60
+    date=datetime.now()
+    if "session_mesgs" in messages:
+        date= messages.get("session_mesgs")[0]["timestamp"]
+    
     if "user_profile_mesgs" in messages_keys:
         try:
             weight = messages.get('user_profile_mesgs',[{}])[0].get('weight',60)
@@ -80,6 +87,7 @@ def extract_data(file):
         try:
             raw_data_df["accumulated_power"] = (raw_data_df["power"].cumsum() / 1000).round().astype("Int64")
         except Exception as e:
+            raw_data_df["accumulated_power"] = pd.Series(0, dtype="Int64", index=raw_data_df.index)
             print(f"No power data to create accumulated power column from {filename}")
 
 
@@ -166,42 +174,40 @@ def extract_data(file):
     try:
         data_df["nm"]= ((raw_data_df["power"] * 60) / (2*(np.pi) * raw_data_df["cadence"])).round(2).astype("Float64")
     except (ValueError, TypeError) as e:
-        print(f"Error with NM data: {e}.")
+        print(f"Error with Nm data: {e}.")
 
 
 
 
-## WEIGHT RELATED METRICS
+## WEIGHT-RELATED METRICS
 
-    if weight:
 
-        try:    
-            
-            data_df["nm_kg"]= (data_df["nm"] / weight).round(2).astype("Float64")
-        except (ValueError, TypeError) as e:
-            print(f"Error converting Nm/kg data from {filename}: {e}.")
-
-        try:    
-            if "accumulated_power" in raw_data_cols:
-                data_df["kj_kg"]= (raw_data_df["accumulated_power"] / 1000 / weight).round(2).astype("Float64")
-        except (ValueError, TypeError) as e:
-            print(f"Error converting kj_kg data from {filename}: {e}.")
-
-        try:
-            if "power" in raw_data_cols:
-                data_df["w_kg"]= (raw_data_df["power"] / weight).round(2).astype("Float64")
-        except (ValueError, TypeError) as e:
-            print(f"Error converting w_kg data {filename}: {e}.")
+    try:    
         
-    else:
-        print(f"No data found for kj/kg and w/kg in {filename}.")
+        data_df["nm_kg"]= (data_df["nm"] / weight).round(2).astype("Float64")
+    except (ValueError, TypeError) as e:
+        print(f"Error converting Nm/kg data from {filename}: {e}.")
+
+    try:    
+        if "accumulated_power" in raw_data_cols:
+            data_df["kj_kg"]= (raw_data_df["accumulated_power"] / 1000 / weight).round(2).astype("Float64")
+    except (ValueError, TypeError) as e:
+        print(f"Error converting kj_kg data from {filename}: {e}.")
+
+    try:
+        if "power" in raw_data_cols:
+            data_df["w_kg"]= (raw_data_df["power"] / weight).round(2).astype("Float64")
+    except (ValueError, TypeError) as e:
+        print(f"Error converting w_kg data {filename}: {e}.")
+        
+
 
 
 
     df_processed= data_df.to_dict("records")
 
 
-    return df_processed
+    return df_processed, date
 
 
 
@@ -209,10 +215,11 @@ def torque_marker(data ,newton_kg= 0.65, match_length= 15, rest= 10, tolerance= 
     
     df= pd.DataFrame.from_records(data)
 
+
     tolerance= tolerance/100
     min_required_values = int(tolerance*match_length)
 
-    df["matches"] = 0.0
+    df["torque"] = pd.Series(0.0, dtype="Float64", index=df.index)
 
     df["match_count"] = 0
     in_match = False
@@ -241,7 +248,7 @@ def torque_marker(data ,newton_kg= 0.65, match_length= 15, rest= 10, tolerance= 
 
         if above_count >= min_required_values and max_below_consecutive <= rest:
 
-            df.loc[i:i+match_length-1, "matches"] = df["nm_kg"].iloc[i:i+match_length].astype("Float64")
+            df.loc[i:i+match_length-1, "torque"] = df["nm_kg"].iloc[i:i+match_length].astype("Float64")
 
             if not in_match:
                 df.loc[i,"match_count"] = 1
@@ -250,28 +257,32 @@ def torque_marker(data ,newton_kg= 0.65, match_length= 15, rest= 10, tolerance= 
         else:
             in_match = False
     
-    df["nm_kg"] = df["nm_kg"].astype(float)
     df.drop(columns="trigger", inplace=True)
 
     return df.copy()
 
 def compute_avg_torque(df: pd.DataFrame):
 
-    """Calcula los promedios de los bloques de valores en la columna 'matches'."""
+    """Calcula los promedios de los bloques de valores en la columna 'torque'."""
     avg_matches = []
     current_block = []
+    test_array= []
 
-    for value in df["matches"]:
-        if value != 0:
-            current_block.append(value)
-        elif current_block:
-            avg_matches.append(sum(current_block) / len(current_block))
-            current_block = []
+    for i, row in df.iterrows():
+        if row["match_count"] == 1:
 
-    if current_block:  # Captura el último bloque si el DF termina sin ceros
+            current_block.append(row["torque"])
+        elif row["match_count"] == 0:
+            
+            if current_block:
+                avg_matches.append(sum(current_block) / len(current_block))
+                current_block = []
+
+    
+    if current_block:
         avg_matches.append(sum(current_block) / len(current_block))
     
-    avg_matches= np.array(avg_matches).astype(float)
+    avg_matches= np.array(avg_matches, dtype=np.float64)
     return avg_matches
 
 
@@ -282,13 +293,13 @@ def process_torque(data, newton_kg, match_lenght, rest, tolerance):
 
  # CHARTS
 
-def torque_chart(df):
+def torque_chart(df, date):
     
     x=df["elapsed_time"]
     elevation=df["elevation"]
     power=df["power"]
     newton_kg=df["nm_kg"]
-    matches=df["matches"]
+    torque=df["torque"]
     work= df["work"]
     
     fig = go.Figure()
@@ -340,10 +351,10 @@ def torque_chart(df):
     #Matches
     fig.add_trace(go.Scatter(
         x=x,
-        y=matches,
+        y=torque,
         mode="lines",
         name="Torque",
-        line= dict(color="rgb(235, 44, 68)", width=0.9),
+        line= dict(color="rgba(235, 44, 68, 0.6)", width=0.8),
         fill="tozeroy",
         fillcolor="rgba(235, 44, 68,0.2)",
         yaxis="y4"
@@ -351,10 +362,11 @@ def torque_chart(df):
 
 
     fig.update_layout(
+        
         template='plotly_dark',
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        title="<b>Matches in Activity</b>",
+        title=f"<b>Selected torque segments</b> {date}",
         font=dict(color="rgb(161, 168, 180)"),
         xaxis=dict(
             fixedrange=False,
@@ -538,41 +550,43 @@ def torque_summary_chart(array):
         tick_list= x_labels
 
     fig.update_layout(
-    template='plotly_dark',
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    title="<b>Torque Summary</b>",
-    font=dict(color="rgb(161, 168, 180)"),
-    xaxis_title="<b>Torque Segments</b>",
-    yaxis_title="Torque (nm/kg)",
-    margin=dict(l=125, r=125, t=30, b=10),
-    
-    xaxis=dict(
-        title_font=dict(color="rgb(161, 168, 180)",size=13),
-        tickmode="array",
-        tickvals=list(x),  
-        ticktext=tick_list,
-        tickangle=-30,
-        tickfont=dict(color="rgb(161, 168, 180)",size=11)
         
+        template='plotly_dark',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        title="<b>Torque segments summary</b>",
+        font=dict(color="rgb(161, 168, 180)"),
+        xaxis_title="<b>Torque Segments</b>",
+        yaxis_title="Torque (nm/kg)",
+        margin=dict(l=125, r=125, t=30, b=10),
         
-    ),
-    yaxis= dict(
-        title="<b>Torque (Nm/kg)</b>",
-        title_font=dict(color="rgba(0, 119, 143, 1)",size=13),
-        tickfont=dict(color="rgba(0, 119, 143, 1)"),
-        showgrid=False
-    ),
+        xaxis=dict(
+            title_font=dict(color="rgb(161, 168, 180)",size=13),
+            tickmode="array",
+            tickvals=list(x),  
+            ticktext=tick_list,
+            tickangle=-30,
+            tickfont=dict(color="rgb(161, 168, 180)",size=11)
+            
+            
+        ),
+        yaxis= dict(
+            title="<b>Torque (Nm/kg)</b>",
+            title_font=dict(color="rgba(0, 119, 143, 1)",size=13),
+            tickfont=dict(color="rgba(0, 119, 143, 1)"),
+            showgrid=False,
+            fixedrange=True  
+        ),
 
-    hovermode="x unified",
+        hovermode="x unified",
 
-    hoverlabel=dict(
-        bgcolor="rgba(45, 45, 45, 0.85)",
-        font_color="rgb(161, 168, 180)",
-        bordercolor="rgba(70, 70, 70, 0.6)"
-    )
-             
-    )
+        hoverlabel=dict(
+            bgcolor="rgba(45, 45, 45, 0.85)",
+            font_color="rgb(161, 168, 180)",
+            bordercolor="rgba(70, 70, 70, 0.6)"
+        )
+                
+        )
 
     fig.update_xaxes(
         # tickmode="auto",
@@ -587,7 +601,7 @@ def torque_summary_chart(array):
 
 
 def torque_time(df):
-    match_time= (df['matches'] > 0).sum()
+    match_time= (df["torque"] > 0).sum()
     match_time_formated=pd.to_timedelta(match_time,unit="s")
     total_time= str(match_time_formated).split(" ")[-1]
 

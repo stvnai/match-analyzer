@@ -98,6 +98,21 @@ gain_loss_container= html.Div(
         html.H1("--", id= "torque-gain-loss-h1", className= "summ-metrics-h1")
     ]
 )
+enter_weight_container= html.Div(
+    id= "torque-enter-weight-container",
+    className= "weight-container",
+    children= [
+        html.H2("Enter weight (kg):", id= "torque-enter-weight-h2", className= "enter-weight-h2"),
+        dcc.Input(
+            id="torque-weight-input",
+        className="input-weight",
+        type="number",
+        value=60,
+        min=50,
+        max=120
+        )
+    ]
+)
 
 summ_metrics_container= html.Div(
     id= "torque-summ-metrics-container",
@@ -106,7 +121,8 @@ summ_metrics_container= html.Div(
         match_time_container,
         match_count_container,
         power_trend_container,
-        gain_loss_container
+        gain_loss_container,
+        enter_weight_container
     ],
     style={
         "display":"none",
@@ -124,7 +140,6 @@ power_slider= dcc.Slider(
     max=2.5,
     vertical=True,
     verticalHeight= 200,
-    updatemode="drag",
     marks={
         0.5:"0.5",
         1.5:"1.5",
@@ -151,7 +166,6 @@ match_length_slider= dcc.Slider(
     step=5,
     vertical=True,
     verticalHeight= 200,
-    updatemode="drag",
     marks={
         10: "00:10",
         600:"10:00",
@@ -178,7 +192,6 @@ rest_slider= dcc.Slider(
     step=5,
     vertical=True,
     verticalHeight= 200,
-    updatemode="drag",
     marks={
         10: "00:10",
         300:"05:00",
@@ -205,7 +218,6 @@ tolerance_slider= dcc.Slider(
     step=1,
     vertical=True,
     verticalHeight= 200,
-    updatemode="drag",
     marks={
         50: "50%",
         75:"75%",
@@ -439,13 +451,49 @@ parameters_container= html.Div(
 match_chart_container= html.Div(
     id= "torque-match-chart-container",
     className= "match-chart-container",
-    children=[dcc.Graph(id="torque-matches-chart", className="matches-chart")]
+    children=[
+        dcc.Graph(
+            id="torque-matches-chart", 
+            className="matches-chart", 
+            config={
+                "modeBarButtonsToRemove": [
+                    'pan2d',
+                    'select2d',
+                    'lasso2d',
+                    
+                    'zoomOut2d',
+                    "autoscale",
+                    'zoomIn2d',
+                    'zoom2d'
+                ],
+                "displaylogo": False
+            }
+        )
+    ]
 )
 
 summary_chart_container= html.Div(
     id= "torque-summary-chart-container",
     className= "summary-chart-container",
-    children=[dcc.Graph(id="torque-summary-chart", className="summary-chart")]
+    children=[
+        dcc.Graph(
+            id="torque-summary-chart",
+            className="summary-chart",
+            config={
+                "modeBarButtonsToRemove": [
+                    'pan2d',
+                    'select2d',
+                    'lasso2d',
+                    
+                    'zoomOut2d',
+                    "autoscale",
+                    'zoomIn2d',
+                    'zoom2d'
+                ],
+                "displaylogo": False
+            }
+        )
+    ]
 )
 
 charts_container= html.Div(
@@ -456,8 +504,6 @@ charts_container= html.Div(
         summary_chart_container
     ]
 )
-
-
 
 #####*** MAIN CONTENT AREA ***#####
 
@@ -492,7 +538,8 @@ logout_button= html.Button(
     style={"textDecoration": "none"})  
 
 
-data_store= dcc.Store(id="torque-data-store")
+torque_data_store= dcc.Store(id="torque-data-store")
+torque_date_store= dcc.Store(id="torque-date-store")
 
 return_button = html.A(
     "← Return",
@@ -509,7 +556,8 @@ torque_main_container= html.Div(
     children= [
         return_button,
         logout_button,
-        data_store,
+        torque_data_store,
+        torque_date_store,
         header_container,
         summ_metrics_container,
         main_content_area,

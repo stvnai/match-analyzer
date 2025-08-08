@@ -18,9 +18,6 @@ from dash_app.callbacks.redirect_callbacks import redirect_to_match_analyzer, re
 from dash_app.callbacks.initial_dataload_callback import initial_load, torque_initial_load
 from dash_app.callbacks.logout_callback import log_out, torque_log_out,  main_log_out
 
-from dotenv import load_dotenv
-load_dotenv()
-
 
 token= os.getenv("SECRET_TOKEN")
 login_manager = LoginManager()

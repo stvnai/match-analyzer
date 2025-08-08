@@ -1,5 +1,5 @@
 
-from dash import Input, Output, State, callback
+from dash import Input, Output, State, callback, no_update
 from dash_app.matchanalyzer import match_marker, compute_avg_matches, match_chart, match_summary_chart, match_time, summ_metric_values
 from dash_app.torqueanalyzer import torque_marker, torque_chart, torque_summ_metric_values, torque_time, compute_avg_torque, torque_summary_chart
 
@@ -69,21 +69,25 @@ def update_data_app(app):
             Output("gain-loss-h1", "children",allow_duplicate=True),
             Output("loading-container", "style", allow_duplicate=True),
         [
-            Input("power-input", "value"),
-            Input("match-length-input", "value"),
-            Input("rest-input", "value"),
-            Input("tolerance-input", "value")
+            Input("power-slider", "value"),
+            Input("match-length-slider", "value"),
+            Input("rest-slider", "value"),
+            Input("tolerance-slider", "value")
         ],
     
             State("data-store", "data"),
+            State("date-store", "data"),
             prevent_initial_call=True
     )
 
-    def update_charts_data(power, match_length, rest, tolerance, data):
+    def update_charts_data(power, match_length, rest, tolerance, data, date):
+
+        if power is None or match_length is None or rest is None or tolerance is None:
+            return no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update
 
         df= match_marker(data, power, match_length, rest, tolerance)
         matches_summary= compute_avg_matches(df)
-        matches_fig= match_chart(df)
+        matches_fig= match_chart(df, date)
         summary_fig, trend=match_summary_chart(matches_summary)
         match_time_value= match_time(df)
         match_count= len(matches_summary)
@@ -165,21 +169,25 @@ def torque_update_data_app(app):
             Output("torque-gain-loss-h1", "children",allow_duplicate=True),
             Output("torque-loading-container", "style", allow_duplicate=True),
         [
-            Input("torque-power-input", "value"),
-            Input("torque-match-length-input", "value"),
-            Input("torque-rest-input", "value"),
-            Input("torque-tolerance-input", "value")
+            Input("torque-power-slider", "value"),
+            Input("torque-match-length-slider", "value"),
+            Input("torque-rest-slider", "value"),
+            Input("torque-tolerance-slider", "value")
         ],
     
             State("torque-data-store", "data"),
+            State("torque-date-store", "data"),
             prevent_initial_call=True
     )
 
-    def torque_update_charts_data(newton_kg, match_length, rest, tolerance, data):
+    def torque_update_charts_data(newton_kg, match_length, rest, tolerance, data, date):
+
+        if newton_kg is None or match_length is None or rest is None or tolerance is None:
+            return no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update, no_update
 
         df= torque_marker(data, newton_kg, match_length, rest, tolerance)
         matches_summary= compute_avg_torque(df)
-        matches_fig= torque_chart(df)
+        matches_fig= torque_chart(df, date)
         summary_fig, trend=torque_summary_chart(matches_summary)
         match_time_value= torque_time(df)
         match_count= len(matches_summary)
@@ -190,6 +198,5 @@ def torque_update_data_app(app):
         gain_loss_style= {"color":color}
         updating_data_style = {"display":"none"}
 
-
         
-        return matches_fig, summary_fig, match_time_value, match_count, trend_value, power_trend_style, gain_loss, gain_loss_style,percentage_value,updating_data_style
+        return matches_fig, summary_fig, match_time_value, match_count, trend_value, power_trend_style, gain_loss, gain_loss_style, percentage_value, updating_data_style
