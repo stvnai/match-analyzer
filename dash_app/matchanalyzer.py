@@ -195,7 +195,7 @@ def match_marker(data ,match_power= 200, match_length= 15, rest= 10, tolerance= 
     tolerance= tolerance/100
     min_required_values = int(tolerance*match_length)
 
-    df["matches"] = pd.Series(np.nan, dtype="Float64", index=df.index)
+    df["matches"] = pd.Series(0.0, dtype="Float64", index=df.index)
 
     df["match_count"] = 0
     in_match = False
