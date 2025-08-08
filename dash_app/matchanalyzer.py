@@ -195,7 +195,7 @@ def match_marker(data ,match_power= 200, match_length= 15, rest= 10, tolerance= 
     tolerance= tolerance/100
     min_required_values = int(tolerance*match_length)
 
-    df["matches"] = 0
+    df["matches"] = pd.Series(np.nan, dtype="Float64", index=df.index)
 
     df["match_count"] = 0
     in_match = False
@@ -239,23 +239,19 @@ def match_marker(data ,match_power= 200, match_length= 15, rest= 10, tolerance= 
     return df.copy()
 
 def compute_avg_matches(df: pd.DataFrame):
-    """Calcula los promedios de los bloques de valores en la columna 'torque'."""
+    """Calcula los promedios de los bloques de valores en la columna 'matches'."""
     avg_matches = []
     current_block = []
 
 
-    for i, row in df.iterrows():
-        if row["match_count"] == 1:
-            
+    for value in df["matches"]:
+        if pd.notna(value):
 
-            current_block.append(row["matches"])
-        elif row["match_count"] == 0:
-            
-            if current_block:
+            current_block.append(value)
+        elif current_block:
                 avg_matches.append(sum(current_block) / len(current_block))
                 current_block = []
 
-    # Capturar último bloque si existe
     if current_block:
         avg_matches.append(sum(current_block) / len(current_block))
     
