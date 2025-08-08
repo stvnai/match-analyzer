@@ -219,7 +219,7 @@ def torque_marker(data ,newton_kg= 0.65, match_length= 15, rest= 10, tolerance= 
     tolerance= tolerance/100
     min_required_values = int(tolerance*match_length)
 
-    df["torque"] = pd.Series(0.0, dtype="Float64", index=df.index)
+    df["torque"] = pd.Series(np.nan, dtype="Float64", index=df.index)
 
     df["match_count"] = 0
     in_match = False
@@ -263,22 +263,19 @@ def torque_marker(data ,newton_kg= 0.65, match_length= 15, rest= 10, tolerance= 
 
 def compute_avg_torque(df: pd.DataFrame):
 
-    """Calcula los promedios de los bloques de valores en la columna 'torque'."""
+    """Calcula los promedios de los bloques de valores en la columna 'matches'."""
     avg_matches = []
     current_block = []
-    test_array= []
+    
 
-    for i, row in df.iterrows():
-        if row["match_count"] == 1:
+    for value in df["torque"]:
+        if pd.notna(value):
 
-            current_block.append(row["torque"])
-        elif row["match_count"] == 0:
-            
-            if current_block:
+            current_block.append(value)
+        elif current_block:
                 avg_matches.append(sum(current_block) / len(current_block))
                 current_block = []
 
-    
     if current_block:
         avg_matches.append(sum(current_block) / len(current_block))
     
