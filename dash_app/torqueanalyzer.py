@@ -219,7 +219,7 @@ def torque_marker(data ,newton_kg= 0.65, match_length= 15, rest= 10, tolerance= 
     tolerance= tolerance/100
     min_required_values = int(tolerance*match_length)
 
-    df["torque"] = pd.Series(np.nan, dtype="Float64", index=df.index)
+    df["torque"] = pd.Series(0.0, dtype="Float64", index=df.index)
 
     df["match_count"] = 0
     in_match = False
