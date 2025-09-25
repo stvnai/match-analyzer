@@ -195,7 +195,8 @@ def match_marker(data ,match_power= 200, match_length= 15, rest= 10, tolerance= 
     tolerance= tolerance/100
     min_required_values = int(tolerance*match_length)
 
-    df["matches"] = pd.Series(0.0, dtype="Float64", index=df.index)
+    df["matches"] = 0
+    df["marker"] = "o"
 
     df["match_count"] = 0
     in_match = False
@@ -215,7 +216,7 @@ def match_marker(data ,match_power= 200, match_length= 15, rest= 10, tolerance= 
         max_below_consecutive = 0
         
         for val in window:
-            if val < match_power:
+            if pd.isna(val) or val < match_power:
                 below_count +=1
                 max_below_consecutive = max(max_below_consecutive, below_count)
 
@@ -225,7 +226,7 @@ def match_marker(data ,match_power= 200, match_length= 15, rest= 10, tolerance= 
         if above_count >= min_required_values and max_below_consecutive <= rest:
 
             df.loc[i:i+match_length-1, "matches"] = df["power"].iloc[i:i+match_length]
-
+            df.loc[i:i+match_length-1, "marker"] = "x"
             if not in_match:
                 df.loc[i,"match_count"] = 1
                 in_match = True
@@ -244,13 +245,16 @@ def compute_avg_matches(df: pd.DataFrame):
     current_block = []
 
 
-    for value in df["matches"]:
-        if pd.notna(value):
+    for i, row in df.iterrows():
+        if row["marker"] == "x":
 
-            current_block.append(value)
-        elif current_block:
+            if pd.notna(row["matches"]):
+                current_block.append(row["matches"])
+        elif row["marker"] == "o":
+            if current_block:
                 avg_matches.append(sum(current_block) / len(current_block))
                 current_block = []
+                
 
     if current_block:
         avg_matches.append(sum(current_block) / len(current_block))
