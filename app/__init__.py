@@ -146,7 +146,8 @@ def create_dash_main(flask_app_server:Flask) -> Dash:
         server=flask_app_server,
         suppress_callback_exceptions=True,
         assets_folder=assets_path,
-        url_base_pathname="/dash/"
+        url_base_pathname="/dash/",
+        requests_pathname_prefix= "/match-torque-analyzer/"
     )
     
     dash_app.title= "Select App"
