@@ -10,7 +10,7 @@ from app import csrf
 
 
 main= Blueprint("main", __name__)
-dash_blueprint = Blueprint('dash_blueprint', __name__, url_prefix='/dash')
+dadash_blueprint = Blueprint('dash_blueprint', __name__, url_prefix='/match-torque-analyzer')
 
 @main.route("/")
 def index():
@@ -31,30 +31,13 @@ def login():
             user= User(user_id, username)
             login_user(user)
 
-            return redirect("/dash/")
+            return redirect(url_for("dash_blueprint.index"))
 
         else:
             flash("Wrong username or password", "danger")
             return redirect(url_for("main.login"))
     
     return render_template("login.html", login_form=loginform)
-
-
-# @main.route("/dash/match-analyzer", methods=["GET", "POST"])
-# @login_required
-# @csrf.exempt
-# def match_analyzer():
-#     return redirect("/dash/match-analyzer")
-    
-
-
-@main.route("/test", methods=["GET", "POST"])
-@login_required
-def test():
-    logout_form= LogOutForm()
-    return render_template("test.html", logout_form=logout_form)
-
-
 
 
 
@@ -68,30 +51,3 @@ def logout():
     return redirect(url_for("main.login"))
 
 
-# ## API ROUTES
-
-# @main.route("/api/upload", methods=["POST"])
-# @login_required
-# def api_upload():
-#     return jsonify({
-#         "status":"success",
-#         "message":"Upload endpoint working",
-#         "user_id": session.get("user_id")
-#     })
-
-# @main.route("/api/process", methods=["POST"])
-# @login_required
-# def api_process():
-#     return jsonify({
-#         "status":"success",
-#         "message":"Process endpoint working",
-#         "user_id": session.get("user_id")
-#     })
-
-# @main.route("/api/csrf-token", methods=["GET"])
-# @login_required
-# def get_csrf_token():
-#     from flask_wtf.csrf import generate_csrf
-#     return jsonify({
-#         "csrf_token": generate_csrf()
-#     })

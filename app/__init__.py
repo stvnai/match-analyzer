@@ -6,6 +6,8 @@ from flask import redirect, request, url_for
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 from .models import User
 from .db.db_connections import get_user_by_id
 
@@ -34,7 +36,9 @@ def create_flask_app() -> Flask:
     :return Flask: flask app.
     
     """
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path="/match-torque-analyzer/static")
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+    app.config["APPLICATION_ROOT"] = "/match-torque-analyzer"
     app.secret_key = token
     login_manager.init_app(app)
     csrf.init_app(app)
@@ -54,11 +58,46 @@ def create_flask_app() -> Flask:
 
     @app.before_request
     def restrict_dash():
-        if request.path.startswith("/dash") and not current_user.is_authenticated:
+        if request.path.startswith("/match-torque-analyzer") and not current_user.is_authenticated:
             return redirect(url_for("main.login"))
 
     return app
 
+
+# MAIN PAGE
+
+
+def create_dash_main(flask_app_server:Flask) -> Dash:
+
+    """
+    Description:
+    -----
+        Creates dash app into a flask server.
+
+    :return Dash: dash app.
+    
+    """
+
+    assets_path = Path(__file__).parent.parent / "dash_app" / "assets"
+
+    dash_app= Dash(
+        name="MatchAnalyzer",
+        server=flask_app_server,
+        suppress_callback_exceptions=True,
+        assets_folder=assets_path,
+        url_base_pathname="/match-torque-analyzer/",
+    )
+    
+    dash_app.title= "Select App"
+
+    dash_app.layout= dash_main_container
+
+    redirect_to_match_analyzer(dash_app)
+    redirect_to_torque_analyzer(dash_app)
+    main_log_out(dash_app)
+
+    
+    return dash_app
 
 #DASH APP
 
@@ -80,7 +119,7 @@ def create_dash_match_analyzer(flask_app_server:Flask) -> Dash:
         server=flask_app_server,
         suppress_callback_exceptions=True,
         assets_folder=assets_path,
-        url_base_pathname="/dash/match-analyzer/"
+        url_base_pathname="/match-torque-analyzer/match-analyzer/"
     )
     
     dash_app.title= "Match Analyzer"
@@ -114,7 +153,7 @@ def create_dash_torque_analyzer(flask_app_server:Flask) -> Dash:
         server=flask_app_server,
         suppress_callback_exceptions=True,
         assets_folder=assets_path,
-        url_base_pathname="/dash/torque-analyzer/"
+        url_base_pathname="/match-torque-analyzer/torque-analyzer/"
     )
     
     dash_app.title= "Torque Analyzer"
@@ -128,36 +167,5 @@ def create_dash_torque_analyzer(flask_app_server:Flask) -> Dash:
     
     return dash_app
 
-def create_dash_main(flask_app_server:Flask) -> Dash:
 
-    """
-    Description:
-    -----
-        Creates dash app into a flask server.
-
-    :return Dash: dash app.
-    
-    """
-
-    assets_path = Path(__file__).parent.parent / "dash_app" / "assets"
-
-    dash_app= Dash(
-        name="MatchAnalyzer",
-        server=flask_app_server,
-        suppress_callback_exceptions=True,
-        assets_folder=assets_path,
-        url_base_pathname="/dash/",
-        requests_pathname_prefix= "/match-torque-analyzer/"
-    )
-    
-    dash_app.title= "Select App"
-
-    dash_app.layout= dash_main_container
-
-    redirect_to_match_analyzer(dash_app)
-    redirect_to_torque_analyzer(dash_app)
-    main_log_out(dash_app)
-
-    
-    return dash_app
 
