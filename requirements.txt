@@ -4,7 +4,6 @@ charset-normalizer==3.4.2
 click==8.2.1
 colorama==0.4.6
 dash==3.1.1
-dotenv==0.9.9
 Flask==3.1.1
 Flask-Login==0.6.3
 Flask-WTF==1.2.2
