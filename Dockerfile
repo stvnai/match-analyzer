@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 8020
 
-CMD ["gunicorn", "-w", "1", "--threads", "2", "-b", "0.0.0.0:8020", "run:app"]
+CMD ["gunicorn", "-w", "1", "--threads", "2", "--preload", "-b", "0.0.0.0:8020", "run:app"]
